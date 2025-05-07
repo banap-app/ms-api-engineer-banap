@@ -1,6 +1,6 @@
 import { ValueObject } from "./ValueObject";
 
 export abstract class Entity {
-    abstract getId(): ValueObject
-    abstract toJSON: any
+    abstract get getId(): ValueObject
+    abstract toJSON(): any
 }

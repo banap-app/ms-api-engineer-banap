@@ -1,5 +1,3 @@
-
-
 export class Notification {
     errors = new Map<string, string[] | string>()
 
