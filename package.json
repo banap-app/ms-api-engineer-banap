@@ -1,0 +1,37 @@
+{
+  "name": "ms-api-engineer-banap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/banap-app/ms-api-engineer-banap.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/banap-app/ms-api-engineer-banap/issues"
+  },
+  "homepage": "https://github.com/banap-app/ms-api-engineer-banap#readme",
+  "devDependencies": {
+    "@swc/cli": "^0.7.8",
+    "@swc/core": "^1.13.5",
+    "@types/lodash": "^4.17.20",
+    "@types/node": "^24.5.1",
+    "@types/uuid": "^10.0.0",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "3.6.2",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "class-validator": "^0.14.2",
+    "lodash": "^4.17.21",
+    "uuid": "^13.0.0"
+  }
+}
