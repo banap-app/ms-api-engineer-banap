@@ -1,3 +1,4 @@
+import { Either } from '../../shared/domain/either.js';
 import { ValueObject } from '../../shared/domain/value-objects.js';
 import { InvalidPasswordError } from './errors/invalid-password-error.js';
 
@@ -22,10 +23,14 @@ export class Password extends ValueObject {
     }
   }
 
-  static create(password: string) {
+  static createWithValidation(password: string) {
     const instance = new Password(password);
     instance.validate();
     return instance;
+  }
+
+  static create(password: string): Either<Password, InvalidPasswordError> {
+    return Either.safe(() => Password.createWithValidation(password));
   }
 
   get value() {

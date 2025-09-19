@@ -1,3 +1,4 @@
+import { Either } from '../../shared/domain/either.js';
 import { ValueObject } from '../../shared/domain/value-objects.js';
 import { InvalidCREAError } from './errors/invalid-crea-error.js';
 
@@ -19,10 +20,14 @@ export class CREA extends ValueObject {
     }
   }
 
-  static create(crea: string) {
+  static createWithValidation(crea: string) {
     const instance = new CREA(crea);
     instance.validate();
     return instance;
+  }
+
+  static create(crea: string): Either<CREA, InvalidCREAError> {
+    return Either.safe(() => CREA.createWithValidation(crea));
   }
 
   get value() {
