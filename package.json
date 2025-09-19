@@ -1,11 +1,14 @@
 {
-  "type": "module",
   "name": "ms-api-engineer-banap",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "nest build",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main"
   },
   "repository": {
     "type": "git",
@@ -19,10 +22,12 @@
   },
   "homepage": "https://github.com/banap-app/ms-api-engineer-banap#readme",
   "devDependencies": {
+    "@nestjs/cli": "^11.0.10",
+    "@nestjs/schematics": "^11.0.7",
     "@swc/cli": "^0.7.8",
     "@swc/core": "^1.13.5",
     "@types/lodash": "^4.17.20",
-    "@types/node": "^24.5.1",
+    "@types/node": "^24.5.2",
     "@types/uuid": "^10.0.0",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
@@ -31,8 +36,17 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.1.6",
+    "@nestjs/platform-express": "^11.1.6",
+    "@nestjs/typeorm": "^11.0.0",
+    "bcryptjs": "^3.0.2",
     "class-validator": "^0.14.2",
     "lodash": "^4.17.21",
+    "pg": "^8.16.3",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.27",
     "uuid": "^13.0.0"
   }
 }
