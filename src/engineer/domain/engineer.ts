@@ -38,31 +38,31 @@ export type EngineerCreateProps = {
 export class EngineerId extends Uuid {}
 
 export class Engineer extends Entity {
-  private engineerId: EngineerId;
-  private name: string;
-  private email: string;
-  private password: Password;
-  private profilePicture: string | null;
-  private crea: CREA;
-  private userType: UserType;
-  private isActive: boolean;
-  private createdAt: Date;
-  private updatedAt: Date;
-  private deletedAt: Date | null;
+  private readonly _engineerId: EngineerId;
+  private _name: string;
+  private _email: string;
+  private _password: Password;
+  private _profilePicture: string | null;
+  private _crea: CREA;
+  private _userType: UserType;
+  private _isActive: boolean;
+  private _createdAt: Date;
+  private _updatedAt: Date;
+  private _deletedAt: Date | null;
 
   constructor(props: EngineerConstructorProps) {
     super();
-    this.engineerId = props.engineerId ?? new EngineerId();
-    this.name = props.name;
-    this.email = props.email;
-    this.password = props.password;
-    this.profilePicture = props.profilePicture ?? null;
-    this.crea = props.crea;
-    this.userType = props.userType ?? UserType.ENGINEER;
-    this.isActive = props.isActive ?? true;
-    this.createdAt = props.createdAt ?? new Date();
-    this.updatedAt = props.updatedAt ?? new Date();
-    this.deletedAt = props.deletedAt ?? null;
+    this._engineerId = props.engineerId ?? new EngineerId();
+    this._name = props.name;
+    this._email = props.email;
+    this._password = props.password;
+    this._profilePicture = props.profilePicture ?? null;
+    this._crea = props.crea;
+    this._userType = props.userType ?? UserType.ENGINEER;
+    this._isActive = props.isActive ?? true;
+    this._createdAt = props.createdAt ?? new Date();
+    this._updatedAt = props.updatedAt ?? new Date();
+    this._deletedAt = props.deletedAt ?? null;
   }
 
   static create(props: EngineerCreateProps) {
@@ -87,7 +87,7 @@ export class Engineer extends Entity {
     }
 
     if (creaError) {
-      engineer.notification.addError(creaError.message, 'password');
+      engineer.notification.addError(creaError.message, 'crea');
     }
 
     engineer.validate([]);
@@ -100,21 +100,84 @@ export class Engineer extends Entity {
     return engineerValidate.validate(this.notification, this, fields);
   }
 
+  public activate() {
+    this._isActive = true;
+    this._deletedAt = null;
+  }
+
+  public deactivate() {
+    this._isActive = false;
+    this._deletedAt = new Date();
+  }
+
   get id(): EngineerId {
-    return this.engineerId;
+    return this._engineerId;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  get email(): string {
+    return this._email;
+  }
+
+  get profilePicture(): string | null {
+    return this._profilePicture;
+  }
+
+  get crea(): CREA {
+    return this._crea;
+  }
+
+  get userType(): UserType {
+    return this._userType;
+  }
+
+  get isActive(): boolean {
+    return this._isActive;
+  }
+
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  get deletedAt(): Date | null {
+    return this._deletedAt;
+  }
+
+  public changeName(name: string) {
+    this._name = name;
+    this._updatedAt = new Date();
+    this.validate(['name']);
+  }
+
+  public changeEmail(email: string) {
+    this._email = email;
+    this._updatedAt = new Date();
+    this.validate(['email']);
+  }
+
+  public changeProfilePicture(profilePicture: string) {
+    this._profilePicture = profilePicture;
+    this._updatedAt = new Date();
   }
 
   toJSON() {
     return {
-      engineerId: this.engineerId.uuid,
-      name: this.name,
-      email: this.email,
-      profilePicture: this.profilePicture,
-      userType: this.userType,
-      isActive: this.isActive,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-      deletedAt: this.deletedAt,
+      engineerId: this._engineerId.uuid,
+      name: this._name,
+      email: this._email,
+      profilePicture: this._profilePicture,
+      userType: this._userType,
+      isActive: this._isActive,
+      createdAt: this._createdAt,
+      updatedAt: this._updatedAt,
+      deletedAt: this._deletedAt,
     };
   }
 }
