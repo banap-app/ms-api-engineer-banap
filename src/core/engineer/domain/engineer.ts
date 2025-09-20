@@ -122,6 +122,10 @@ export class Engineer extends Entity {
     return this._email;
   }
 
+  get password(): string {
+    return this._password.value;
+  }
+
   get profilePicture(): string | null {
     return this._profilePicture;
   }
@@ -162,6 +166,10 @@ export class Engineer extends Entity {
     this.validate(['email']);
   }
 
+  public changeHashedPassword(hashedPassword: string) {
+    this._password = Password.hashPassword(hashedPassword);
+  }
+
   public changeProfilePicture(profilePicture: string) {
     this._profilePicture = profilePicture;
     this._updatedAt = new Date();
@@ -173,6 +181,7 @@ export class Engineer extends Entity {
       name: this._name,
       email: this._email,
       profilePicture: this._profilePicture,
+      crea: this._crea,
       userType: this._userType,
       isActive: this._isActive,
       createdAt: this._createdAt,
