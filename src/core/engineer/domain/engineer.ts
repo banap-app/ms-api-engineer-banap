@@ -7,7 +7,7 @@ import { InvalidPasswordError } from './errors/invalid-password-error.js';
 import { Password } from './password-vo.js';
 
 export enum UserType {
-  NULL = 0,
+  ADMIN = 0,
   ENGINEER = 1,
   PRODUCER = 2,
 }
