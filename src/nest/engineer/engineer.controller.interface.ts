@@ -38,13 +38,16 @@ export function SwaggerCreateEngineer() {
           message: 'Entity Validation Error',
           errors: [
             {
-              name: ['Name should not be empty'],
+              name: ['name should not be empty'],
             },
             {
-              email: ['Email already in use'],
+              email: ['email already in use'],
             },
             {
-              password: ['Invalid password'],
+              password: ['invalid password'],
+            },
+            {
+              crea: ['crea already registered'],
             },
           ],
         },

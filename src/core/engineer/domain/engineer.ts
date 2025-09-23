@@ -179,7 +179,7 @@ export class Engineer extends Entity {
       name: this._name,
       email: this._email,
       profilePicture: this._profilePicture,
-      crea: this._crea,
+      crea: this._crea.value,
       userType: this._userType,
       isActive: this._isActive,
       createdAt: this._createdAt,

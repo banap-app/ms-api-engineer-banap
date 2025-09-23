@@ -1,3 +1,4 @@
+import { CREA } from 'src/core/engineer/domain/crea-vo';
 import { Engineer, EngineerId } from 'src/core/engineer/domain/engineer';
 import { EngineerRepository } from 'src/core/engineer/domain/engineer-repository';
 import { Repository } from 'typeorm';
@@ -48,5 +49,20 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
     }
 
     return EngineerEntityMapper.toDomain(engineer);
+  }
+
+  async findByCrea(crea: CREA): Promise<Boolean> {
+    if (!crea) return false;
+
+    const engineer = await this.ormRepository.findOne({
+      where: { crea: { number: crea.value } },
+      relations: ['crea'],
+    });
+
+    if (!engineer) {
+      return false;
+    }
+
+    return true;
   }
 }

@@ -11,21 +11,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-// @Entity('user_types')
-// export class UserTypeEntity {
-//   @PrimaryGeneratedColumn()
-//   id: number;
-
-//   @Column({ type: 'int', unique: true })
-//   type: UserType;
-
-//   @Column()
-//   display_name: string;
-
-//   @Column({ type: 'simple-array' })
-//   required_fields: string[];
-// }
-
 @Entity('crea')
 export class CreaEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -70,11 +55,6 @@ export class EngineerEntity {
   @JoinColumn({ name: 'crea_id' })
   crea: CreaEntity;
 
-  // @ManyToOne(() => UserTypeEntity, {
-  //   eager: true,
-  // })
-  // @JoinColumn({ name: 'user_type_id' })
-  // user_type: UserTypeEntity;
   @Column({ type: 'enum', enum: UserType, default: UserType.ENGINEER })
   user_type: UserType;
 

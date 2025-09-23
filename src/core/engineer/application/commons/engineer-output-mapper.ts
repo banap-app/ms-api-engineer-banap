@@ -1,4 +1,3 @@
-import { CREA } from '../../domain/crea-vo';
 import { Engineer } from '../../domain/engineer';
 
 export type EngineerOutput = {
@@ -6,7 +5,7 @@ export type EngineerOutput = {
   name: string;
   email: string;
   profilePicture: string;
-  crea: CREA;
+  crea: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

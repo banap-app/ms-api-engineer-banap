@@ -30,6 +30,13 @@ export class CreateEngineerUseCase
   ): Promise<CreateEngineerOutput> {
     const aEngineer = Engineer.create(aCommand);
 
+    const duplicateCrea = await this.engineerRepository.findByCrea(
+      aEngineer.crea,
+    );
+    if (duplicateCrea) {
+      aEngineer.notification.addError('crea already registered', 'crea');
+    }
+
     const existingUser = await this.engineerRepository.findByEmail(
       aEngineer.email,
     );
