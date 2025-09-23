@@ -1,6 +1,6 @@
 import { Engineer, EngineerId } from 'src/core/engineer/domain/engineer';
-import { EngineerEntity } from './engineer-entity';
 import { Password } from 'src/core/engineer/domain/password-vo';
+import { EngineerEntity } from './engineer-entity';
 
 export class EngineerEntityMapper {
   static toEntity(engineer: Engineer): EngineerEntity {
@@ -8,9 +8,10 @@ export class EngineerEntityMapper {
       engineerId: engineer.id,
       name: engineer.name,
       email: engineer.email,
-      password: engineer.password as any,
+      password: engineer.password,
       profilePicture: engineer.profilePicture,
       crea: engineer.crea,
+      userType: engineer.userType,
       isActive: engineer.isActive,
       createdAt: engineer.createdAt,
       updatedAt: engineer.updatedAt,
@@ -32,6 +33,7 @@ export class EngineerEntityMapper {
           : null,
       profilePicture: engineerEntity.profile_picture,
       crea: engineerEntity.crea.toVo(),
+      userType: engineerEntity.user_type,
       isActive: engineerEntity.is_active,
       createdAt: engineerEntity.created_at,
       updatedAt: engineerEntity.updated_at,

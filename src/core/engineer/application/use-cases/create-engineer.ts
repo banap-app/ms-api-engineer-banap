@@ -1,14 +1,13 @@
+import { HashService } from 'src/core/shared/application/hash-service';
 import { UseCase } from 'src/core/shared/application/use-case';
+import { EntityValidationException } from 'src/core/shared/domain/validators/validation-errors';
 import { Engineer } from '../../domain/engineer';
-import { CreateEngineerCommand } from './create-engineer-command';
 import { EngineerRepository } from '../../domain/engineer-repository';
 import {
   EngineerOutput,
   EngineerOutputMapper,
 } from '../commons/engineer-output-mapper';
-import { Hash } from 'crypto';
-import { HashService } from 'src/core/shared/application/hash-service';
-import { EntityValidationError } from 'src/core/shared/domain/validators/validation-errors';
+import { CreateEngineerCommand } from './create-engineer-command';
 
 export type CreateEngineerOutput = EngineerOutput;
 
@@ -35,14 +34,17 @@ export class CreateEngineerUseCase
       aEngineer.email,
     );
     if (existingUser) {
-      aEngineer.notification.addError('Email already in use', 'engineer');
+      aEngineer.notification.addError('email already in use', 'email');
     }
 
     if (aEngineer.notification.hasErrors()) {
-      throw new EntityValidationError(aEngineer.notification.toJSON());
+      throw new EntityValidationException(aEngineer.notification.toJSON());
     }
 
-    const hashPassword = await this.hashService.encode(aEngineer.password, 10);
+    const hashPassword = await this.hashService.encode(
+      aEngineer.password.value,
+      10,
+    );
 
     aEngineer.changeHashedPassword(hashPassword);
 

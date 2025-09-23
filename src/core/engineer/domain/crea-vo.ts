@@ -15,7 +15,7 @@ export class CREA extends ValueObject {
     const isValid = regex.test(this.crea);
     if (!isValid) {
       throw new InvalidCREAError(
-        'Invalid CREA format. Expected format: 123456-XX',
+        'invalid CREA format, expected format: 123456-XX',
       );
     }
   }

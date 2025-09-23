@@ -37,8 +37,16 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
     throw new Error('Method not implemented.');
   }
 
-  async findByEmail(email: string): Promise<Engineer> {
-    const engineer = await this.ormRepository.findOneBy({ email });
-    return engineer ? EngineerEntityMapper.toDomain(engineer) : null;
+  async findByEmail(email: string): Promise<Engineer | null> {
+    const engineer = await this.ormRepository.findOne({
+      where: { email },
+      relations: ['crea'],
+    });
+
+    if (!engineer) {
+      return null;
+    }
+
+    return EngineerEntityMapper.toDomain(engineer);
   }
 }

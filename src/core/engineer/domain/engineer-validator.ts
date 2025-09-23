@@ -1,11 +1,12 @@
-import type { Engineer } from './engineer.js';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { ClassValidatorRules } from '../../shared/domain/validators/class-validator-rules.js';
 import type { Notification } from '../../shared/domain/validators/notification.js';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import type { Engineer } from './engineer.js';
 
 export class EngineerRules {
   constructor(entity: Engineer) {
-    Object.assign(this, entity);
+    this.name = entity.name;
+    this.email = entity.email;
   }
 
   @IsString()

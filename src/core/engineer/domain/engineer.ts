@@ -2,8 +2,6 @@ import { Entity } from '../../shared/domain/entity.js';
 import { Uuid } from '../../shared/domain/value-objects/uuid-vo.js';
 import { CREA } from './crea-vo.js';
 import { EngineerValidatorFactory } from './engineer-validator.js';
-import { InvalidCREAError } from './errors/invalid-crea-error.js';
-import { InvalidPasswordError } from './errors/invalid-password-error.js';
 import { Password } from './password-vo.js';
 
 export enum UserType {
@@ -69,12 +67,12 @@ export class Engineer extends Entity {
     const [password, passwordError] = Password.create(props.password).toTuple();
     const [crea, creaError] = CREA.create(props.crea).toTuple();
 
-    if (!password) {
-      throw new InvalidPasswordError('Password is required');
-    }
-    if (!crea) {
-      throw new InvalidCREAError('CREA is required');
-    }
+    // if (!password) {
+    //   throw new InvalidPasswordError('Password is required');
+    // }
+    // if (!crea) {
+    //   throw new InvalidCREAError('CREA is required');
+    // }
 
     const engineer = new Engineer({
       ...props,
@@ -122,8 +120,8 @@ export class Engineer extends Entity {
     return this._email;
   }
 
-  get password(): string {
-    return this._password.value;
+  get password(): Password {
+    return this._password;
   }
 
   get profilePicture(): string | null {

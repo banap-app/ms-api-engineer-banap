@@ -2,7 +2,7 @@ export type CreateEngineerCommandProps = {
   name: string;
   email: string;
   password: string;
-  profilePicture: string;
+  profilePicture?: string;
   crea: string;
 };
 

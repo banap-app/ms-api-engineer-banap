@@ -7,26 +7,24 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('user_types')
-export class UserTypeEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+// @Entity('user_types')
+// export class UserTypeEntity {
+//   @PrimaryGeneratedColumn()
+//   id: number;
 
-  @Column({ type: 'int', unique: true })
-  type: UserType;
+//   @Column({ type: 'int', unique: true })
+//   type: UserType;
 
-  @Column()
-  display_name: string;
+//   @Column()
+//   display_name: string;
 
-  @Column({ type: 'simple-array' })
-  required_fields: string[];
-}
+//   @Column({ type: 'simple-array' })
+//   required_fields: string[];
+// }
 
 @Entity('crea')
 export class CreaEntity {
@@ -68,23 +66,25 @@ export class EngineerEntity {
   @Column({ type: 'text', nullable: true })
   profile_picture: string;
 
-  @OneToOne(() => CreaEntity, { nullable: true })
+  @OneToOne(() => CreaEntity, { cascade: true })
   @JoinColumn({ name: 'crea_id' })
-  crea: CreaEntity | null;
+  crea: CreaEntity;
 
-  @ManyToOne(() => UserTypeEntity, {
-    eager: true,
-  })
-  @JoinColumn({ name: 'user_type_id' })
-  user_type: UserTypeEntity;
+  // @ManyToOne(() => UserTypeEntity, {
+  //   eager: true,
+  // })
+  // @JoinColumn({ name: 'user_type_id' })
+  // user_type: UserTypeEntity;
+  @Column({ type: 'enum', enum: UserType, default: UserType.ENGINEER })
+  user_type: UserType;
 
   @Column({ type: 'boolean', default: true })
   is_active: boolean;
 
-  @Column({ type: 'timestamp', default: 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'timestamp', default: 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -97,7 +97,7 @@ export class EngineerEntity {
     entity.email = props.email;
     entity.password = props.password.value;
     entity.profile_picture = props.profilePicture;
-    entity.crea = props.crea ? CreaEntity.fromVo(props.crea) : null;
+    entity.crea = CreaEntity.fromVo(props.crea);
     entity.is_active = props.isActive;
     entity.created_at = props.createdAt;
     entity.updated_at = props.updatedAt;

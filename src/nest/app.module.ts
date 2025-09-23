@@ -2,6 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import {
+  CreaEntity,
+  EngineerEntity,
+} from 'src/core/engineer/infrastructure/db/typeorm/engineer-entity';
 import { EngineerModule } from './engineer/engineer.module';
 
 @Module({
@@ -10,19 +14,18 @@ import { EngineerModule } from './engineer/engineer.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      entities: [EngineerEntity, CreaEntity],
+      synchronize: true,
+    }),
     EngineerModule,
-    // TypeOrmModule.forRoot({
-    //   type: 'postgres',
-    //   host: process.env.DB_HOST,
-    //   port: parseInt(process.env.DB_PORT),
-    //   username: process.env.DB_USERNAME,
-    //   password: process.env.DB_PASSWORD,
-    //   database: process.env.DB_DATABASE,
-    //   entities: [],
-    //   synchronize: true,
-    // }),
   ],
-  controllers: [],
   providers: [Reflector],
 })
 export class AppModule {}

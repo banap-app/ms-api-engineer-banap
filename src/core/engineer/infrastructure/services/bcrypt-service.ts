@@ -1,5 +1,5 @@
-import { HashService } from 'src/core/shared/application/hash-service';
 import * as bcrypt from 'bcryptjs';
+import { HashService } from 'src/core/shared/application/hash-service';
 
 export class BcryptService implements HashService {
   async encode(data: string, salt: number): Promise<string> {
