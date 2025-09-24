@@ -1,6 +1,6 @@
 import { HashService } from 'src/core/shared/application/hash-service';
 import { UseCase } from 'src/core/shared/application/use-case';
-import { EntityValidationException } from 'src/core/shared/domain/validators/validation-errors';
+import { EntityValidationError } from 'src/core/shared/domain/validators/validation-errors';
 import { Engineer } from '../../domain/engineer';
 import { EngineerRepository } from '../../domain/engineer-repository';
 import {
@@ -45,7 +45,7 @@ export class CreateEngineerUseCase
     }
 
     if (aEngineer.notification.hasErrors()) {
-      throw new EntityValidationException(aEngineer.notification.toJSON());
+      throw new EntityValidationError(aEngineer.notification.toJSON());
     }
 
     const hashPassword = await this.hashService.encode(
