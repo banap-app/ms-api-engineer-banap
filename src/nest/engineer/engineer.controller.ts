@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
-import { CreateEngineerUseCase } from 'src/core/engineer/application/use-cases/create-engineer';
-import { CreateEngineerCommand } from 'src/core/engineer/application/use-cases/create-engineer-command';
+import { CreateEngineerUseCase } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer';
+import { CreateEngineerCommand } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer-command';
 import { CreateEngineerDto } from './dto/create-engineer.dto';
 import { SwaggerCreateEngineer } from './engineer.controller.interface';
 

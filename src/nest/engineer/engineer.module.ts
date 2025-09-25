@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { CreateEngineerUseCase } from 'src/core/engineer/application/use-cases/create-engineer';
+import { CreateEngineerUseCase } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer';
 import {
   CreaEntity,
   EngineerEntity,
