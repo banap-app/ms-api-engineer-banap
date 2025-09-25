@@ -20,7 +20,8 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
     throw new Error('Method not implemented.');
   }
   async update(entity: Engineer): Promise<void> {
-    throw new Error('Method not implemented.');
+    const engineer = EngineerEntityMapper.toEntity(entity);
+    await this.ormRepository.update({ id: engineer.id }, engineer);
   }
   async bulkUpdate(entities: Engineer[]): Promise<void> {
     throw new Error('Method not implemented.');
@@ -32,7 +33,11 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
     throw new Error('Method not implemented.');
   }
   async findById(entity_id: EngineerId): Promise<Engineer> {
-    throw new Error('Method not implemented.');
+    const engineer = await this.ormRepository.findOne({
+      where: { id: entity_id.uuid },
+      relations: ['crea'],
+    });
+    return EngineerEntityMapper.toDomain(engineer);
   }
   async findAll(): Promise<Engineer[]> {
     throw new Error('Method not implemented.');
