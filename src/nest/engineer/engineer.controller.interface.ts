@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { CreateEngineerDto } from './dto/create-engineer.dto';
 
 export function SwaggerCreateEngineer() {
@@ -52,6 +52,25 @@ export function SwaggerCreateEngineer() {
           ],
         },
       },
+    }),
+  );
+}
+
+export function SwaggerDeleteEngineer() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Delete engineer',
+      description: 'Soft deletes a engineer',
+    }),
+    ApiParam({
+      name: 'id',
+      type: 'string',
+      description: 'Engineer ID',
+      required: true,
+    }),
+    ApiResponse({
+      status: 204,
+      description: 'Engineer deleted successfully',
     }),
   );
 }

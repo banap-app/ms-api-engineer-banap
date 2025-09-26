@@ -105,7 +105,9 @@ export class Engineer extends Entity {
 
   public deactivate() {
     this._isActive = false;
-    this._deletedAt = new Date();
+    if (this._deletedAt == null) {
+      this._deletedAt = new Date();
+    }
   }
 
   get id(): EngineerId {

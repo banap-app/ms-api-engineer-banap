@@ -9,6 +9,7 @@ import { EngineerTypeOrmRepository } from 'src/core/engineer/infrastructure/db/t
 import { BcryptService } from 'src/core/engineer/infrastructure/services/bcrypt-service';
 import { Repository } from 'typeorm';
 import { EngineerController } from './engineer.controller';
+import { DeleteEngineerUseCase } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer';
 
 @Module({
   imports: [TypeOrmModule.forFeature([EngineerEntity, CreaEntity])],
@@ -28,6 +29,13 @@ import { EngineerController } from './engineer.controller';
         return new CreateEngineerUseCase(repo, bcrypt);
       },
       inject: [EngineerTypeOrmRepository, BcryptService],
+    },
+    {
+      provide: DeleteEngineerUseCase,
+      useFactory: (repo: EngineerTypeOrmRepository) => {
+        return new DeleteEngineerUseCase(repo);
+      },
+      inject: [EngineerTypeOrmRepository],
     },
   ],
   exports: [EngineerTypeOrmRepository],
