@@ -5,18 +5,17 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { EntityValidationError } from 'src/core/shared/domain/validators/validation-errors';
+import { InvalidUuidError } from 'src/core/shared/domain/errors/invalid-uuid-error';
 
-@Catch(EntityValidationError)
-export class EntityValidationFilter implements ExceptionFilter {
-  catch(error: EntityValidationError, host: ArgumentsHost) {
+@Catch(InvalidUuidError)
+export class InvalidUuidFilter implements ExceptionFilter {
+  catch(error: InvalidUuidError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
 
     res.status(HttpStatus.BAD_REQUEST).json({
       statusCode: HttpStatus.BAD_REQUEST,
       message: error.message,
-      errors: error.errors,
     });
   }
 }
