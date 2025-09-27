@@ -168,10 +168,22 @@ export class Engineer extends Entity {
 
   public changeHashedPassword(hashedPassword: string) {
     this._password = Password.hashPassword(hashedPassword);
+    this._updatedAt = new Date();
   }
 
   public changeProfilePicture(profilePicture: string) {
     this._profilePicture = profilePicture;
+    this._updatedAt = new Date();
+  }
+
+  public changeCrea(newCrea: string) {
+    const [crea, creaError] = CREA.create(newCrea).toTuple();
+
+    if (creaError) {
+      this.notification.addError(creaError.message, 'crea');
+    }
+
+    this._crea = crea;
     this._updatedAt = new Date();
   }
 

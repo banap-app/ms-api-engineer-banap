@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { CreateEngineerUseCase } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer';
+import { DeleteEngineerUseCase } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer';
+import { UpdateEngineerUseCase } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer';
 import {
   CreaEntity,
   EngineerEntity,
@@ -9,7 +11,6 @@ import { EngineerTypeOrmRepository } from 'src/core/engineer/infrastructure/db/t
 import { BcryptService } from 'src/core/engineer/infrastructure/services/bcrypt-service';
 import { Repository } from 'typeorm';
 import { EngineerController } from './engineer.controller';
-import { DeleteEngineerUseCase } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer';
 
 @Module({
   imports: [TypeOrmModule.forFeature([EngineerEntity, CreaEntity])],
@@ -27,6 +28,13 @@ import { DeleteEngineerUseCase } from 'src/core/engineer/application/use-cases/d
       provide: CreateEngineerUseCase,
       useFactory: (repo: EngineerTypeOrmRepository, bcrypt: BcryptService) => {
         return new CreateEngineerUseCase(repo, bcrypt);
+      },
+      inject: [EngineerTypeOrmRepository, BcryptService],
+    },
+    {
+      provide: UpdateEngineerUseCase,
+      useFactory: (repo: EngineerTypeOrmRepository, bcrypt: BcryptService) => {
+        return new UpdateEngineerUseCase(repo, bcrypt);
       },
       inject: [EngineerTypeOrmRepository, BcryptService],
     },
