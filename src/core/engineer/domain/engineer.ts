@@ -157,13 +157,13 @@ export class Engineer extends Entity {
   public changeName(name: string) {
     this._name = name;
     this._updatedAt = new Date();
-    this.validate(['name']);
+    this.validate([]);
   }
 
   public changeEmail(email: string) {
     this._email = email;
     this._updatedAt = new Date();
-    this.validate(['email']);
+    this.validate([]);
   }
 
   public changeHashedPassword(hashedPassword: string) {

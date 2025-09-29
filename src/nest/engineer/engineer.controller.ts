@@ -12,7 +12,9 @@ import { CreateEngineerCommand } from 'src/core/engineer/application/use-cases/c
 import { DeleteEngineerUseCase } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer';
 import { DeleteEngineerCommand } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer-command';
 import { UpdateEngineerUseCase } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer';
+import { UpdateEngineerCommand } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer-command';
 import { CreateEngineerDto } from './dto/create-engineer.dto';
+import { UpdateEngineerDto } from './dto/update-engineer.dto';
 import {
   SwaggerCreateEngineer,
   SwaggerDeleteEngineer,
@@ -38,7 +40,16 @@ export class EngineerController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string) {}
+  async update(
+    @Param('id') id: string,
+    @Body() updateEngineerDto: UpdateEngineerDto,
+  ) {
+    const command = new UpdateEngineerCommand({
+      engineerId: id,
+      ...updateEngineerDto,
+    });
+    return this.updateEngineerUseCase.execute(command);
+  }
 
   @SwaggerDeleteEngineer()
   @Delete(':id')
