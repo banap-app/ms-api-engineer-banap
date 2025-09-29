@@ -3,6 +3,8 @@ import {
   Body,
   Controller,
   Delete,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -18,6 +20,7 @@ import { UpdateEngineerDto } from './dto/update-engineer.dto';
 import {
   SwaggerCreateEngineer,
   SwaggerDeleteEngineer,
+  SwaggerUpdateEngineer,
 } from './engineer.controller.interface';
 
 @Controller('engineer')
@@ -39,7 +42,9 @@ export class EngineerController {
     return this.createEngineerUseCase.execute(command);
   }
 
+  @SwaggerUpdateEngineer()
   @Patch(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async update(
     @Param('id') id: string,
     @Body() updateEngineerDto: UpdateEngineerDto,

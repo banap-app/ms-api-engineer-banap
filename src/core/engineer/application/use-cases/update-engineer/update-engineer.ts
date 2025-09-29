@@ -11,7 +11,7 @@ import {
 } from '../../commons/engineer-output-mapper';
 import { UpdateEngineerCommand } from './update-engineer-command';
 
-export type UpdateEngineerOutput = EngineerOutput;
+export type UpdateEngineerOutput = void;
 
 export class UpdateEngineerUseCase
   implements UseCase<UpdateEngineerCommand, UpdateEngineerOutput>
@@ -81,7 +81,5 @@ export class UpdateEngineerUseCase
     }
 
     await this.engineerRepository.update(engineer);
-
-    return EngineerOutputMapper.toOutput(engineer);
   }
 }

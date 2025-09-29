@@ -1,6 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { CreateEngineerDto } from './dto/create-engineer.dto';
+import { UpdateEngineerDto } from './dto/update-engineer.dto';
 
 export function SwaggerCreateEngineer() {
   return applyDecorators(
@@ -56,6 +57,62 @@ export function SwaggerCreateEngineer() {
   );
 }
 
+export function SwaggerUpdateEngineer() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Update engineer',
+      description: 'Updates a existing active user in the system',
+    }),
+    ApiBody({
+      description: 'Update engineer payload',
+      type: UpdateEngineerDto,
+    }),
+    ApiParam({
+      name: 'id',
+      type: 'string',
+      description: 'Engineer ID',
+      required: true,
+    }),
+    ApiResponse({
+      status: 204,
+      description: 'Engineer updated succesfully',
+    }),
+    ApiResponse({
+      status: 400,
+      description: 'Validation error',
+      schema: {
+        example: {
+          message: 'Entity Validation Error',
+          errors: [
+            {
+              name: ['name should not be empty'],
+            },
+            {
+              email: ['email already in use'],
+            },
+            {
+              password: ['invalid password'],
+            },
+            {
+              crea: ['crea already registered'],
+            },
+          ],
+        },
+      },
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'Not found',
+      schema: {
+        example: {
+          statusCode: 404,
+          message: 'user not found',
+        },
+      },
+    }),
+  );
+}
+
 export function SwaggerDeleteEngineer() {
   return applyDecorators(
     ApiOperation({
@@ -71,6 +128,26 @@ export function SwaggerDeleteEngineer() {
     ApiResponse({
       status: 204,
       description: 'Engineer deleted successfully',
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'Not found',
+      schema: {
+        example: {
+          statusCode: 404,
+          message: 'user not found',
+        },
+      },
+    }),
+    ApiResponse({
+      status: 400,
+      description: 'Bad request',
+      schema: {
+        example: {
+          statusCode: 400,
+          message: 'invalid UUID',
+        },
+      },
     }),
   );
 }
