@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -20,8 +21,11 @@ import { UpdateEngineerDto } from './dto/update-engineer.dto';
 import {
   SwaggerCreateEngineer,
   SwaggerDeleteEngineer,
+  SwaggerGetEngineer,
   SwaggerUpdateEngineer,
 } from './engineer.controller.interface';
+import { GetEngineerCommand } from 'src/core/engineer/application/use-cases/retrieve-engineer/get-engineer-command';
+import { GetEngineerUseCase } from 'src/core/engineer/application/use-cases/retrieve-engineer/get-engineer';
 
 @Controller('engineer')
 export class EngineerController {
@@ -29,10 +33,12 @@ export class EngineerController {
     private readonly createEngineerUseCase: CreateEngineerUseCase,
     private readonly deleteEngineerUseCase: DeleteEngineerUseCase,
     private readonly updateEngineerUseCase: UpdateEngineerUseCase,
+    private readonly getEngineerUseCase: GetEngineerUseCase,
   ) {}
 
   @SwaggerCreateEngineer()
   @Post()
+  @HttpCode(HttpStatus.OK)
   async create(@Body() createEngineerDto: CreateEngineerDto) {
     if (!createEngineerDto) {
       throw new BadRequestException('No data provided');
@@ -40,6 +46,14 @@ export class EngineerController {
 
     const command = new CreateEngineerCommand(createEngineerDto);
     return this.createEngineerUseCase.execute(command);
+  }
+
+  @SwaggerGetEngineer()
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async get(@Param('id') id: string) {
+    const command = new GetEngineerCommand(id);
+    return this.getEngineerUseCase.execute(command);
   }
 
   @SwaggerUpdateEngineer()
@@ -58,6 +72,7 @@ export class EngineerController {
 
   @SwaggerDeleteEngineer()
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string) {
     const command = new DeleteEngineerCommand(id);
     return this.deleteEngineerUseCase.execute(command);

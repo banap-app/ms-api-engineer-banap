@@ -57,6 +57,59 @@ export function SwaggerCreateEngineer() {
   );
 }
 
+export function SwaggerGetEngineer() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Get engineer',
+      description: 'Get a existing active user in the system',
+    }),
+    ApiParam({
+      name: 'id',
+      type: 'string',
+      description: 'Engineer ID',
+      required: true,
+    }),
+    ApiResponse({
+      status: 201,
+      description: 'Engineer created successfully',
+      schema: {
+        example: {
+          id: '8815433c-1eaa-448d-a6ed-de9635099fd2',
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          profilePicture: 'https://example.com/profile.jpg',
+          crea: '123456-SP',
+          userType: 1,
+          isActive: true,
+          createdAt: '2025-10-01T12:00:00Z',
+          updatedAt: '2025-10-01T12:00:00Z',
+          deletedAt: null,
+        },
+      },
+    }),
+    ApiResponse({
+      status: 400,
+      description: 'Bad request',
+      schema: {
+        example: {
+          statusCode: 400,
+          message: 'invalid UUID',
+        },
+      },
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'Not found',
+      schema: {
+        example: {
+          statusCode: 404,
+          message: 'user not found',
+        },
+      },
+    }),
+  );
+}
+
 export function SwaggerUpdateEngineer() {
   return applyDecorators(
     ApiOperation({
@@ -130,22 +183,22 @@ export function SwaggerDeleteEngineer() {
       description: 'Engineer deleted successfully',
     }),
     ApiResponse({
-      status: 404,
-      description: 'Not found',
-      schema: {
-        example: {
-          statusCode: 404,
-          message: 'user not found',
-        },
-      },
-    }),
-    ApiResponse({
       status: 400,
       description: 'Bad request',
       schema: {
         example: {
           statusCode: 400,
           message: 'invalid UUID',
+        },
+      },
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'Not found',
+      schema: {
+        example: {
+          statusCode: 404,
+          message: 'user not found',
         },
       },
     }),

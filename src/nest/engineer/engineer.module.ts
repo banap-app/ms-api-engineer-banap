@@ -11,6 +11,7 @@ import { EngineerTypeOrmRepository } from 'src/core/engineer/infrastructure/db/t
 import { BcryptService } from 'src/core/engineer/infrastructure/services/bcrypt-service';
 import { Repository } from 'typeorm';
 import { EngineerController } from './engineer.controller';
+import { GetEngineerUseCase } from 'src/core/engineer/application/use-cases/retrieve-engineer/get-engineer';
 
 @Module({
   imports: [TypeOrmModule.forFeature([EngineerEntity, CreaEntity])],
@@ -30,6 +31,13 @@ import { EngineerController } from './engineer.controller';
         return new CreateEngineerUseCase(repo, bcrypt);
       },
       inject: [EngineerTypeOrmRepository, BcryptService],
+    },
+    {
+      provide: GetEngineerUseCase,
+      useFactory: (repo: EngineerTypeOrmRepository) => {
+        return new GetEngineerUseCase(repo);
+      },
+      inject: [EngineerTypeOrmRepository],
     },
     {
       provide: UpdateEngineerUseCase,
