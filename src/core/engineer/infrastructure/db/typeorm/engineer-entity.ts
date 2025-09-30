@@ -3,13 +3,7 @@ import {
   EngineerConstructorProps,
   UserType,
 } from 'src/core/engineer/domain/engineer';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('crea')
 export class CreaEntity {
@@ -19,13 +13,17 @@ export class CreaEntity {
   @Column({ unique: true })
   number: string;
 
+  @Column({ type: 'uuid', unique: true })
+  engineer_id: string;
+
   get stateCode(): string {
     return this.number.split('-')[1];
   }
 
-  static fromVo(vo: CREA): CreaEntity {
+  static fromVo(vo: CREA, engineerId): CreaEntity {
     const entity = new CreaEntity();
     entity.number = vo.value;
+    entity.engineer_id = engineerId;
     return entity;
   }
 
@@ -51,10 +49,6 @@ export class EngineerEntity {
   @Column({ type: 'text', nullable: true })
   profile_picture: string;
 
-  @OneToOne(() => CreaEntity, { cascade: true })
-  @JoinColumn({ name: 'crea_id' })
-  crea: CreaEntity;
-
   @Column({ type: 'enum', enum: UserType, default: UserType.ENGINEER })
   user_type: UserType;
 
@@ -77,7 +71,6 @@ export class EngineerEntity {
     entity.email = props.email;
     entity.password = props.password.value;
     entity.profile_picture = props.profilePicture;
-    entity.crea = CreaEntity.fromVo(props.crea);
     entity.is_active = props.isActive;
     entity.created_at = props.createdAt;
     entity.updated_at = props.updatedAt;

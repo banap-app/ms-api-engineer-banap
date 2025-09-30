@@ -70,8 +70,8 @@ export function SwaggerGetEngineer() {
       required: true,
     }),
     ApiResponse({
-      status: 201,
-      description: 'Engineer created successfully',
+      status: 200,
+      description: 'Engineer found',
       schema: {
         example: {
           id: '8815433c-1eaa-448d-a6ed-de9635099fd2',

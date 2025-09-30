@@ -7,29 +7,36 @@ import { EngineerEntityMapper } from './engineer-entity-mapper';
 
 export class EngineerTypeOrmRepository implements EngineerRepository {
   private ormRepository: Repository<EngineerEntity>;
-  constructor(ormRepository: Repository<EngineerEntity>) {
+  private creaRepository: Repository<CreaEntity>;
+
+  constructor(
+    ormRepository: Repository<EngineerEntity>,
+    creaRepository: Repository<CreaEntity>,
+  ) {
     this.ormRepository = ormRepository;
+    this.creaRepository = creaRepository;
   }
 
   async insert(entity: Engineer): Promise<void> {
     const engineer = EngineerEntityMapper.toEntity(entity);
     await this.ormRepository.save(engineer);
+
+    if (entity.crea) {
+      const crea = CreaEntity.fromVo(entity.crea, entity.id.uuid);
+      await this.creaRepository.save(crea);
+    }
   }
 
   async bulkInsert(entities: Engineer[]): Promise<void> {
     throw new Error('Method not implemented.');
   }
+
   async update(entity: Engineer): Promise<void> {
-    const engineer = await this.ormRepository.findOne({
-      where: { id: entity.id.uuid },
-      relations: ['crea'],
+    const engineer = await this.ormRepository.findOneBy({
+      id: entity.id.uuid,
     });
 
     if (!engineer) return;
-
-    if (entity.crea) {
-      engineer.crea.number = entity.crea.value;
-    }
 
     engineer.name = entity.name;
     engineer.email = entity.email;
@@ -40,7 +47,20 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
     engineer.deleted_at = entity.deletedAt;
 
     await this.ormRepository.save(engineer);
+
+    if (entity.crea) {
+      let crea = await this.creaRepository.findOneBy({
+        engineer_id: entity.id.uuid,
+      });
+      if (!crea) {
+        crea = CreaEntity.fromVo(entity.crea, entity.id.uuid);
+      } else {
+        crea.number = entity.crea.value;
+      }
+      await this.creaRepository.save(crea);
+    }
   }
+
   async bulkUpdate(entities: Engineer[]): Promise<void> {
     throw new Error('Method not implemented.');
   }
@@ -50,43 +70,50 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
   async bulkDelete(entities_id: EngineerId[]): Promise<void> {
     throw new Error('Method not implemented.');
   }
+
   async findById(entity_id: EngineerId): Promise<Engineer | null> {
-    const engineer = await this.ormRepository.findOne({
-      where: { id: entity_id.uuid },
-      relations: ['crea'],
+    const engineer = await this.ormRepository.findOneBy({
+      id: entity_id.uuid,
     });
     if (!engineer) return null;
-    return EngineerEntityMapper.toDomain(engineer, { needPassword: true });
+
+    const crea = await this.creaRepository.findOneBy({
+      engineer_id: engineer.id,
+    });
+
+    return EngineerEntityMapper.toDomain(engineer, {
+      creaEntity: crea,
+      needPassword: true,
+    });
   }
+
   async findAll(): Promise<Engineer[]> {
     throw new Error('Method not implemented.');
   }
 
   async findByEmail(email: string): Promise<Engineer | null> {
-    const engineer = await this.ormRepository.findOne({
-      where: { email },
-      relations: ['crea'],
+    const engineer = await this.ormRepository.findOneBy({
+      email,
+    });
+    if (!engineer) return null;
+
+    const crea = await this.creaRepository.findOneBy({
+      engineer_id: engineer.id,
     });
 
-    if (!engineer) {
-      return null;
-    }
-
-    return EngineerEntityMapper.toDomain(engineer);
+    return EngineerEntityMapper.toDomain(engineer, {
+      creaEntity: crea,
+      needPassword: false,
+    });
   }
 
   async findByCrea(crea: CREA): Promise<Boolean> {
     if (!crea) return false;
 
-    const engineer = await this.ormRepository.findOne({
-      where: { crea: { number: crea.value } },
-      relations: ['crea'],
+    const existing = await this.creaRepository.findOneBy({
+      number: crea.value,
     });
 
-    if (!engineer) {
-      return false;
-    }
-
-    return true;
+    return !!existing;
   }
 }
