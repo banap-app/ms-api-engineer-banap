@@ -14,9 +14,10 @@ export type EngineerOutput = {
 
 export class EngineerOutputMapper {
   static toOutput(entity: Engineer) {
-    const { engineerId, ...other } = entity.toJSON();
+    const { engineerId, profilePicture, ...other } = entity.toJSON();
     return {
       id: engineerId,
+      profilePicture: entity.profilePicture ? entity.profilePicture.url : null,
       ...other,
     };
   }

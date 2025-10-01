@@ -14,8 +14,11 @@ import { CreateEngineerUseCase } from 'src/core/engineer/application/use-cases/c
 import { CreateEngineerCommand } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer-command';
 import { DeleteEngineerUseCase } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer';
 import { DeleteEngineerCommand } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer-command';
+import { GetEngineerUseCase } from 'src/core/engineer/application/use-cases/retrieve-engineer/get-engineer';
+import { GetEngineerCommand } from 'src/core/engineer/application/use-cases/retrieve-engineer/get-engineer-command';
 import { UpdateEngineerUseCase } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer';
 import { UpdateEngineerCommand } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer-command';
+import { ProfilePicture } from 'src/core/engineer/domain/profile-picture-vo';
 import { CreateEngineerDto } from './dto/create-engineer.dto';
 import { UpdateEngineerDto } from './dto/update-engineer.dto';
 import {
@@ -24,8 +27,6 @@ import {
   SwaggerGetEngineer,
   SwaggerUpdateEngineer,
 } from './engineer.controller.interface';
-import { GetEngineerCommand } from 'src/core/engineer/application/use-cases/retrieve-engineer/get-engineer-command';
-import { GetEngineerUseCase } from 'src/core/engineer/application/use-cases/retrieve-engineer/get-engineer';
 
 @Controller('engineer')
 export class EngineerController {
@@ -38,13 +39,33 @@ export class EngineerController {
 
   @SwaggerCreateEngineer()
   @Post()
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createEngineerDto: CreateEngineerDto) {
     if (!createEngineerDto) {
       throw new BadRequestException('No data provided');
     }
 
-    const command = new CreateEngineerCommand(createEngineerDto);
+    let profilePicture: ProfilePicture | undefined = undefined;
+
+    if (createEngineerDto.profilePicture) {
+      const [pp, ppError] = ProfilePicture.createFromFile(
+        createEngineerDto.profilePicture,
+      ).toTuple();
+
+      if (ppError) {
+        throw new BadRequestException(ppError.message);
+      }
+
+      profilePicture = pp;
+    }
+
+    const command = new CreateEngineerCommand({
+      name: createEngineerDto.name,
+      email: createEngineerDto.email,
+      password: createEngineerDto.password,
+      profilePicture,
+      crea: createEngineerDto.crea,
+    });
     return this.createEngineerUseCase.execute(command);
   }
 
@@ -63,9 +84,30 @@ export class EngineerController {
     @Param('id') id: string,
     @Body() updateEngineerDto: UpdateEngineerDto,
   ) {
+    if (!updateEngineerDto) {
+      throw new BadRequestException('No data provided');
+    }
+
+    let profilePicture: ProfilePicture | undefined = undefined;
+
+    if (updateEngineerDto.profilePicture) {
+      const [pp, ppError] = ProfilePicture.createFromFile(
+        updateEngineerDto.profilePicture,
+      ).toTuple();
+
+      if (ppError) {
+        throw new BadRequestException(ppError.message);
+      }
+
+      profilePicture = pp;
+    }
+
     const command = new UpdateEngineerCommand({
       engineerId: id,
-      ...updateEngineerDto,
+      name: updateEngineerDto.name,
+      email: updateEngineerDto.email,
+      profilePicture,
+      crea: updateEngineerDto.crea,
     });
     return this.updateEngineerUseCase.execute(command);
   }

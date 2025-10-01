@@ -1,6 +1,7 @@
 import { CREA } from 'src/core/engineer/domain/crea-vo';
 import { Engineer, EngineerId } from 'src/core/engineer/domain/engineer';
 import { Password } from 'src/core/engineer/domain/password-vo';
+import { ProfilePicture } from 'src/core/engineer/domain/profile-picture-vo';
 import { CreaEntity, EngineerEntity } from './engineer-entity';
 
 export class EngineerEntityMapper {
@@ -32,7 +33,12 @@ export class EngineerEntityMapper {
         options.needPassword == true && engineerEntity.password
           ? Password.hashPassword(engineerEntity.password)
           : null,
-      profilePicture: engineerEntity.profile_picture,
+      profilePicture: engineerEntity.profile_picture
+        ? new ProfilePicture({
+            name: engineerEntity.profile_picture.name,
+            location: engineerEntity.profile_picture.location,
+          })
+        : null,
       crea: options?.creaEntity
         ? options.creaEntity.toVo()
         : CREA.createWithValidation(''),

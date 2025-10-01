@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   CreaEntity,
   EngineerEntity,
+  ProfilePictureEntity,
 } from 'src/core/engineer/infrastructure/db/typeorm/engineer-entity';
 import { EngineerModule } from './engineer/engineer.module';
 
@@ -21,7 +22,7 @@ import { EngineerModule } from './engineer/engineer.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [EngineerEntity, CreaEntity],
+      entities: [EngineerEntity, CreaEntity, ProfilePictureEntity],
       synchronize: true,
     }),
     EngineerModule,

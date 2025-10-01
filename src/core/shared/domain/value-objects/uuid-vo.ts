@@ -1,6 +1,6 @@
 import { v4 as uuidV4, validate as validateUuid } from 'uuid';
 import { InvalidUuidError } from '../errors/invalid-uuid-error.js';
-import { ValueObject } from '../value-objects.js';
+import { ValueObject } from '../value-object.js';
 
 export class Uuid extends ValueObject {
   readonly uuid: string;

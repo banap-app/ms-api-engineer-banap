@@ -3,6 +3,7 @@ import { Uuid } from '../../shared/domain/value-objects/uuid-vo.js';
 import { CREA } from './crea-vo.js';
 import { EngineerValidatorFactory } from './engineer-validator.js';
 import { Password } from './password-vo.js';
+import { ProfilePicture } from './profile-picture-vo.js';
 
 export enum UserType {
   ADMIN = 0,
@@ -15,7 +16,7 @@ export type EngineerConstructorProps = {
   name: string;
   email: string;
   password: Password;
-  profilePicture?: string | null;
+  profilePicture?: ProfilePicture | null;
   crea: CREA;
   userType?: UserType;
   isActive?: boolean;
@@ -28,7 +29,7 @@ export type EngineerCreateProps = {
   name: string;
   email: string;
   password: string;
-  profilePicture?: string | null;
+  profilePicture?: ProfilePicture | null;
   crea: string;
   userType?: UserType;
 };
@@ -40,7 +41,7 @@ export class Engineer extends Entity {
   private _name: string;
   private _email: string;
   private _password: Password;
-  private _profilePicture: string | null;
+  private _profilePicture: ProfilePicture | null;
   private _crea: CREA;
   private _userType: UserType;
   private _isActive: boolean;
@@ -66,13 +67,6 @@ export class Engineer extends Entity {
   static create(props: EngineerCreateProps) {
     const [password, passwordError] = Password.create(props.password).toTuple();
     const [crea, creaError] = CREA.create(props.crea).toTuple();
-
-    // if (!password) {
-    //   throw new InvalidPasswordError('Password is required');
-    // }
-    // if (!crea) {
-    //   throw new InvalidCREAError('CREA is required');
-    // }
 
     const engineer = new Engineer({
       ...props,
@@ -126,7 +120,7 @@ export class Engineer extends Entity {
     return this._password;
   }
 
-  get profilePicture(): string | null {
+  get profilePicture(): ProfilePicture | null {
     return this._profilePicture;
   }
 
@@ -171,7 +165,7 @@ export class Engineer extends Entity {
     this._updatedAt = new Date();
   }
 
-  public changeProfilePicture(profilePicture: string) {
+  public changeProfilePicture(profilePicture: ProfilePicture) {
     this._profilePicture = profilePicture;
     this._updatedAt = new Date();
   }
@@ -192,7 +186,9 @@ export class Engineer extends Entity {
       engineerId: this._engineerId.uuid,
       name: this._name,
       email: this._email,
-      profilePicture: this._profilePicture,
+      profilePicture: this._profilePicture
+        ? this.profilePicture.toJSON()
+        : null,
       crea: this._crea.value,
       userType: this._userType,
       isActive: this._isActive,

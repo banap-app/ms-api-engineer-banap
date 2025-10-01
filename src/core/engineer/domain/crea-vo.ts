@@ -1,5 +1,5 @@
 import { Either } from '../../shared/domain/either.js';
-import { ValueObject } from '../../shared/domain/value-objects.js';
+import { ValueObject } from '../../shared/domain/value-object.js';
 import { InvalidCREAError } from './errors/invalid-crea-error.js';
 
 export class CREA extends ValueObject {
