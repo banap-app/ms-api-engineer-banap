@@ -3,6 +3,7 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { CreateEngineerUseCase } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer';
 import { DeleteEngineerUseCase } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer';
 import { GetEngineerUseCase } from 'src/core/engineer/application/use-cases/retrieve-engineer/get-engineer';
+import { ValidateEngineerUseCase } from 'src/core/engineer/application/use-cases/retrieve-engineer/validate-engineer';
 import { UpdateEngineerUseCase } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer';
 import {
   CreaEntity,
@@ -42,6 +43,13 @@ import { EngineerController } from './engineer.controller';
       provide: GetEngineerUseCase,
       useFactory: (repo: EngineerTypeOrmRepository) => {
         return new GetEngineerUseCase(repo);
+      },
+      inject: [EngineerTypeOrmRepository],
+    },
+    {
+      provide: ValidateEngineerUseCase,
+      useFactory: (repo: EngineerTypeOrmRepository) => {
+        return new ValidateEngineerUseCase(repo);
       },
       inject: [EngineerTypeOrmRepository],
     },

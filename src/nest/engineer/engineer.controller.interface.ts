@@ -110,6 +110,33 @@ export function SwaggerGetEngineer() {
   );
 }
 
+export function SwaggerValidateEngineer() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Validate engineer',
+      description: 'Validate a existing active user in the system',
+    }),
+    ApiParam({
+      name: 'id',
+      type: 'string',
+      description: 'Engineer ID',
+      required: true,
+    }),
+    ApiResponse({
+      status: 200,
+      example: {
+        success: true,
+      },
+    }),
+    ApiResponse({
+      status: 404,
+      example: {
+        success: false,
+      },
+    }),
+  );
+}
+
 export function SwaggerUpdateEngineer() {
   return applyDecorators(
     ApiOperation({

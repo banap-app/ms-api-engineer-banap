@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -16,6 +17,7 @@ import { DeleteEngineerUseCase } from 'src/core/engineer/application/use-cases/d
 import { DeleteEngineerCommand } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer-command';
 import { GetEngineerUseCase } from 'src/core/engineer/application/use-cases/retrieve-engineer/get-engineer';
 import { GetEngineerCommand } from 'src/core/engineer/application/use-cases/retrieve-engineer/get-engineer-command';
+import { ValidateEngineerUseCase } from 'src/core/engineer/application/use-cases/retrieve-engineer/validate-engineer';
 import { UpdateEngineerUseCase } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer';
 import { UpdateEngineerCommand } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer-command';
 import { ProfilePicture } from 'src/core/engineer/domain/profile-picture-vo';
@@ -26,15 +28,17 @@ import {
   SwaggerDeleteEngineer,
   SwaggerGetEngineer,
   SwaggerUpdateEngineer,
+  SwaggerValidateEngineer,
 } from './engineer.controller.interface';
 
 @Controller('engineer')
 export class EngineerController {
   constructor(
     private readonly createEngineerUseCase: CreateEngineerUseCase,
-    private readonly deleteEngineerUseCase: DeleteEngineerUseCase,
-    private readonly updateEngineerUseCase: UpdateEngineerUseCase,
     private readonly getEngineerUseCase: GetEngineerUseCase,
+    private readonly validateEngineerUseCase: ValidateEngineerUseCase,
+    private readonly updateEngineerUseCase: UpdateEngineerUseCase,
+    private readonly deleteEngineerUseCase: DeleteEngineerUseCase,
   ) {}
 
   @SwaggerCreateEngineer()
@@ -75,6 +79,24 @@ export class EngineerController {
   async get(@Param('id') id: string) {
     const command = new GetEngineerCommand(id);
     return this.getEngineerUseCase.execute(command);
+  }
+
+  @SwaggerValidateEngineer()
+  @Get(':id/validate')
+  @HttpCode(HttpStatus.OK)
+  async validate(@Param('id') id: string) {
+    const command = new GetEngineerCommand(id);
+    const exists = await this.validateEngineerUseCase.execute(command);
+
+    if (!exists) {
+      throw new NotFoundException({
+        success: false,
+      });
+    }
+
+    return {
+      success: true,
+    };
   }
 
   @SwaggerUpdateEngineer()
