@@ -2,7 +2,11 @@ import { CREA } from 'src/core/engineer/domain/crea-vo';
 import { Engineer, EngineerId } from 'src/core/engineer/domain/engineer';
 import { EngineerRepository } from 'src/core/engineer/domain/engineer-repository';
 import { Repository } from 'typeorm';
-import { CreaEntity, EngineerEntity } from './engineer-entity';
+import {
+  CreaEntity,
+  EngineerEntity,
+  ProfilePictureEntity,
+} from './engineer-entity';
 import { EngineerEntityMapper } from './engineer-entity-mapper';
 
 export class EngineerTypeOrmRepository implements EngineerRepository {
@@ -19,6 +23,13 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
 
   async insert(entity: Engineer): Promise<void> {
     const engineer = EngineerEntityMapper.toEntity(entity);
+
+    if (entity.profilePicture) {
+      engineer.profile_picture = ProfilePictureEntity.fromVo(
+        entity.profilePicture,
+      );
+    }
+
     await this.ormRepository.save(engineer);
 
     if (entity.crea) {
@@ -41,10 +52,13 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
     engineer.name = entity.name;
     engineer.email = entity.email;
     engineer.password = entity.password.value;
-    engineer.profile_picture = entity.profilePicture;
     engineer.is_active = entity.isActive;
     engineer.updated_at = new Date();
     engineer.deleted_at = entity.deletedAt;
+
+    engineer.profile_picture = entity.profilePicture
+      ? ProfilePictureEntity.fromVo(entity.profilePicture)
+      : null;
 
     await this.ormRepository.save(engineer);
 

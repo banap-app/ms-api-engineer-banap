@@ -1,5 +1,5 @@
 import { Either } from '../../shared/domain/either.js';
-import { ValueObject } from '../../shared/domain/value-objects.js';
+import { ValueObject } from '../../shared/domain/value-object.js';
 import { InvalidPasswordError } from './errors/invalid-password-error.js';
 
 export class Password extends ValueObject {

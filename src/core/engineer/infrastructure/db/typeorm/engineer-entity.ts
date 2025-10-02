@@ -3,7 +3,33 @@ import {
   EngineerConstructorProps,
   UserType,
 } from 'src/core/engineer/domain/engineer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ProfilePicture } from 'src/core/engineer/domain/profile-picture-vo';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+
+@Entity('profile_picture')
+export class ProfilePictureEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  location: string;
+
+  static fromVo(vo: ProfilePicture): ProfilePictureEntity {
+    const entity = new ProfilePictureEntity();
+    entity.name = vo.name;
+    entity.location = vo.location;
+    return entity;
+  }
+}
 
 @Entity('crea')
 export class CreaEntity {
@@ -46,8 +72,16 @@ export class EngineerEntity {
   @Column({ type: 'text' })
   password: string;
 
-  @Column({ type: 'text', nullable: true })
-  profile_picture: string;
+  @Column({ name: 'profile_picture_id', type: 'uuid', nullable: true })
+  profile_picture_id: string;
+
+  @OneToOne(() => ProfilePictureEntity, {
+    cascade: true,
+    eager: true,
+    nullable: true,
+  })
+  @JoinColumn({ name: 'profile_picture_id' })
+  profile_picture: ProfilePictureEntity;
 
   @Column({ type: 'enum', enum: UserType, default: UserType.ENGINEER })
   user_type: UserType;
@@ -70,11 +104,15 @@ export class EngineerEntity {
     entity.name = props.name;
     entity.email = props.email;
     entity.password = props.password.value;
-    entity.profile_picture = props.profilePicture;
     entity.is_active = props.isActive;
     entity.created_at = props.createdAt;
     entity.updated_at = props.updatedAt;
     entity.deleted_at = props.deletedAt;
+
+    if (props.profilePicture) {
+      const pp = ProfilePictureEntity.fromVo(props.profilePicture);
+      entity.profile_picture = pp;
+    }
 
     return entity;
   }

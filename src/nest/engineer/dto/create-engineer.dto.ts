@@ -1,5 +1,19 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
+
+export class ProfilePictureDto {
+  @ApiProperty({ description: 'Original file name', example: 'profile.jpg' })
+  @IsString()
+  raw_name: string;
+
+  @ApiProperty({ description: 'MIME type', example: 'image/jpeg' })
+  @IsString()
+  mime_type: string;
+
+  @ApiProperty({ description: 'File size in bytes', example: 102400 })
+  @IsNumber()
+  size: number;
+}
 
 export class CreateEngineerDto {
   @ApiProperty({
@@ -24,12 +38,11 @@ export class CreateEngineerDto {
   password: string;
 
   @ApiPropertyOptional({
-    description: 'Profile picture URL',
-    example: 'https://example.com/profile.jpg',
+    type: ProfilePictureDto,
+    description: 'Profile picture',
   })
   @IsOptional()
-  @IsString()
-  profilePicture?: string;
+  profilePicture?: ProfilePictureDto;
 
   @ApiProperty({
     description: 'CREA identification number',

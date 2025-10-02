@@ -1,5 +1,5 @@
 import { Notification } from './validators/notification.js';
-import type { ValueObject } from './value-objects.js';
+import type { ValueObject } from './value-object.js';
 
 export abstract class Entity {
   notification: Notification = new Notification();

@@ -1,5 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { ProfilePictureDto } from './create-engineer.dto';
 
 export class UpdateEngineerDto {
   @ApiPropertyOptional()
@@ -17,10 +18,12 @@ export class UpdateEngineerDto {
   @IsString()
   password?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    type: ProfilePictureDto,
+    description: 'Profile picture',
+  })
   @IsOptional()
-  @IsString()
-  profilePicture?: string;
+  profilePicture?: ProfilePictureDto;
 
   @ApiPropertyOptional()
   @IsOptional()

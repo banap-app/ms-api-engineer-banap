@@ -1,9 +1,11 @@
+import { ProfilePicture } from 'src/core/engineer/domain/profile-picture-vo';
+
 export type UpdateEngineerCommandProps = {
   engineerId: string;
   name?: string;
   email?: string;
   password?: string;
-  profilePicture?: string;
+  profilePicture?: ProfilePicture | null;
   crea?: string;
 };
 
@@ -12,7 +14,7 @@ export class UpdateEngineerCommand {
   public name?: string;
   public email?: string;
   public password?: string;
-  public profilePicture?: string;
+  public profilePicture?: ProfilePicture | null;
   public crea?: string;
 
   constructor(props: UpdateEngineerCommandProps) {
@@ -21,7 +23,7 @@ export class UpdateEngineerCommand {
     this.name = props.name;
     this.email = props.email;
     this.password = props.password;
-    this.profilePicture = props.profilePicture;
+    this.profilePicture = props.profilePicture ?? null;
     this.crea = props.crea;
   }
 }
