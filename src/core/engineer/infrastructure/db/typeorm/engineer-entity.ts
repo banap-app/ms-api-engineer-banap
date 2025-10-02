@@ -8,9 +8,26 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+@Entity('user_type')
+export class UserTypeEntity {
+  @PrimaryGeneratedColumn('increment')
+  id: number;
+
+  @Column({ name: 'name', nullable: false, unique: true })
+  name: string;
+
+  static fromVo(vo: UserType): UserTypeEntity {
+    const entity = new UserTypeEntity();
+    entity.id = vo;
+    entity.name = UserType[vo];
+    return entity;
+  }
+}
 
 @Entity('profile_picture')
 export class ProfilePictureEntity {
@@ -83,8 +100,12 @@ export class EngineerEntity {
   @JoinColumn({ name: 'profile_picture_id' })
   profile_picture: ProfilePictureEntity;
 
-  @Column({ type: 'enum', enum: UserType, default: UserType.ENGINEER })
-  user_type: UserType;
+  @Column({ name: 'user_type_id', type: 'int' })
+  user_type_id: number;
+
+  @ManyToOne(() => UserTypeEntity, { eager: true })
+  @JoinColumn({ name: 'user_type_id' })
+  user_type: UserTypeEntity;
 
   @Column({ type: 'boolean', default: true })
   is_active: boolean;
@@ -105,6 +126,7 @@ export class EngineerEntity {
     entity.email = props.email;
     entity.password = props.password.value;
     entity.is_active = props.isActive;
+    entity.user_type = UserTypeEntity.fromVo(props.userType);
     entity.created_at = props.createdAt;
     entity.updated_at = props.updatedAt;
     entity.deleted_at = props.deletedAt;

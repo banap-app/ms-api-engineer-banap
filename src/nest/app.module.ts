@@ -6,6 +6,7 @@ import {
   CreaEntity,
   EngineerEntity,
   ProfilePictureEntity,
+  UserTypeEntity,
 } from 'src/core/engineer/infrastructure/db/typeorm/engineer-entity';
 import { EngineerModule } from './engineer/engineer.module';
 
@@ -22,7 +23,12 @@ import { EngineerModule } from './engineer/engineer.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [EngineerEntity, CreaEntity, ProfilePictureEntity],
+      entities: [
+        EngineerEntity,
+        CreaEntity,
+        ProfilePictureEntity,
+        UserTypeEntity,
+      ],
       synchronize: true,
     }),
     EngineerModule,

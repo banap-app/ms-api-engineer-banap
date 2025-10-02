@@ -42,7 +42,7 @@ export class EngineerEntityMapper {
       crea: options?.creaEntity
         ? options.creaEntity.toVo()
         : CREA.createWithValidation(''),
-      userType: engineerEntity.user_type,
+      userType: engineerEntity.user_type.id,
       isActive: engineerEntity.is_active,
       createdAt: engineerEntity.created_at,
       updatedAt: engineerEntity.updated_at,
