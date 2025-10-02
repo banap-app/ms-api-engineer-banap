@@ -1,4 +1,4 @@
-import { Engineer } from '../../domain/engineer';
+import { Engineer, UserType } from '../../domain/engineer';
 
 export type EngineerOutput = {
   id: string;
@@ -14,10 +14,11 @@ export type EngineerOutput = {
 
 export class EngineerOutputMapper {
   static toOutput(entity: Engineer) {
-    const { engineerId, profilePicture, ...other } = entity.toJSON();
+    const { engineerId, profilePicture, userType, ...other } = entity.toJSON();
     return {
       id: engineerId,
       profilePicture: entity.profilePicture ? entity.profilePicture.url : null,
+      userType: UserType[entity.userType],
       ...other,
     };
   }
