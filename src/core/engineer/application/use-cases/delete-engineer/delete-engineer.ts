@@ -22,6 +22,9 @@ export class DeleteEngineerUseCase
     if (!engineer) {
       throw new NotFoundError('user');
     }
+    if (!engineer.isActive) {
+      throw new NotFoundError('user');
+    }
 
     engineer.deactivate();
 

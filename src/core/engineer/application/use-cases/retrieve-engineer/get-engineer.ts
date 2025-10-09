@@ -1,12 +1,12 @@
+import { EngineerId } from 'src/core/engineer/domain/engineer';
+import { EngineerRepository } from 'src/core/engineer/domain/engineer-repository';
 import { UseCase } from 'src/core/shared/application/use-case';
+import { NotFoundError } from 'src/core/shared/domain/errors/not-found-error';
 import {
   EngineerOutput,
   EngineerOutputMapper,
 } from '../../commons/engineer-output-mapper';
 import { GetEngineerCommand } from './get-engineer-command';
-import { EngineerRepository } from 'src/core/engineer/domain/engineer-repository';
-import { Engineer, EngineerId } from 'src/core/engineer/domain/engineer';
-import { NotFoundError } from 'src/core/shared/domain/errors/not-found-error';
 
 export type GetEngineerOutput = EngineerOutput;
 
@@ -25,6 +25,9 @@ export class GetEngineerUseCase
     );
 
     if (!engineer) {
+      throw new NotFoundError('engineer');
+    }
+    if (!engineer.isActive) {
       throw new NotFoundError('engineer');
     }
 

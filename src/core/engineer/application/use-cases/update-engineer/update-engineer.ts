@@ -5,10 +5,6 @@ import { HashService } from 'src/core/shared/application/hash-service';
 import { UseCase } from 'src/core/shared/application/use-case';
 import { NotFoundError } from 'src/core/shared/domain/errors/not-found-error';
 import { EntityValidationError } from 'src/core/shared/domain/validators/validation-errors';
-import {
-  EngineerOutput,
-  EngineerOutputMapper,
-} from '../../commons/engineer-output-mapper';
 import { UpdateEngineerCommand } from './update-engineer-command';
 
 export type UpdateEngineerOutput = void;
@@ -35,6 +31,9 @@ export class UpdateEngineerUseCase
     );
 
     if (!engineer) {
+      throw new NotFoundError('engineer');
+    }
+    if (!engineer.isActive) {
       throw new NotFoundError('engineer');
     }
 
