@@ -18,21 +18,21 @@ export class UserTypeEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ name: 'name', nullable: false, unique: true })
-  name: string;
+  @Column({ name: 'type_name', nullable: false, unique: true })
+  type_name: string;
 
   static fromVo(vo: UserType): UserTypeEntity {
     const entity = new UserTypeEntity();
     entity.id = vo;
-    entity.name = UserType[vo];
+    entity.type_name = UserType[vo];
     return entity;
   }
 }
 
-@Entity('profile_picture')
+@Entity('profile_picture_entity')
 export class ProfilePictureEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('increment')
+  id: number;
 
   @Column()
   name: string;
@@ -40,8 +40,9 @@ export class ProfilePictureEntity {
   @Column()
   location: string;
 
-  static fromVo(vo: ProfilePicture): ProfilePictureEntity {
+  static fromVo(vo: ProfilePicture, id?: number): ProfilePictureEntity {
     const entity = new ProfilePictureEntity();
+    entity.id = id;
     entity.name = vo.name;
     entity.location = vo.location;
     return entity;
@@ -89,8 +90,8 @@ export class EngineerEntity {
   @Column({ type: 'text' })
   password: string;
 
-  @Column({ name: 'profile_picture_id', type: 'uuid', nullable: true })
-  profile_picture_id: string;
+  @Column({ name: 'profile_picture_id', type: 'int', nullable: true })
+  profile_picture_id: number;
 
   @OneToOne(() => ProfilePictureEntity, {
     cascade: true,

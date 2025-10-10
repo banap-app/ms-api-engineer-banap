@@ -56,9 +56,21 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
     engineer.updated_at = new Date();
     engineer.deleted_at = entity.deletedAt;
 
-    engineer.profile_picture = entity.profilePicture
-      ? ProfilePictureEntity.fromVo(entity.profilePicture)
-      : null;
+    if (entity.profilePicture) {
+      const hasPicture = !!engineer.profile_picture;
+
+      const pictureChanged =
+        !hasPicture ||
+        entity.profilePicture.name != engineer.profile_picture.name ||
+        entity.profilePicture.location != engineer.profile_picture.location;
+
+      if (pictureChanged) {
+        engineer.profile_picture = ProfilePictureEntity.fromVo(
+          entity.profilePicture,
+          engineer.profile_picture?.id,
+        );
+      }
+    }
 
     await this.ormRepository.save(engineer);
 

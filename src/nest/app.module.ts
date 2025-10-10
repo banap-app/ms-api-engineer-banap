@@ -29,7 +29,7 @@ import { EngineerModule } from './engineer/engineer.module';
         ProfilePictureEntity,
         UserTypeEntity,
       ],
-      synchronize: true,
+      synchronize: false, // false in prod
     }),
     EngineerModule,
   ],

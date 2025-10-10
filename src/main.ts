@@ -12,6 +12,8 @@ async function bootstrap() {
   app.useGlobalFilters(new NotFoundFilter());
   app.useGlobalFilters(new InvalidUuidFilter());
 
+  app.setGlobalPrefix('api');
+
   const config = new DocumentBuilder()
     .setTitle('BANAP Engineer API')
     .setVersion('1.0')
