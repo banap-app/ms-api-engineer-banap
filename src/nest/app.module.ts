@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { Reflector } from '@nestjs/core';
+import { APP_GUARD, Reflector } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   CreaEntity,
@@ -8,13 +8,17 @@ import {
   ProfilePictureEntity,
   UserTypeEntity,
 } from 'src/core/engineer/infrastructure/db/typeorm/engineer-entity';
+import { AxiosModule } from './common/axios/axios.module';
+import httpConfig from './config/httpConfig';
 import { EngineerModule } from './engineer/engineer.module';
+import { AuthGuard } from './guards/auth/auth.guard';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
+      load: [httpConfig],
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -32,7 +36,8 @@ import { EngineerModule } from './engineer/engineer.module';
       synchronize: false, // false in prod
     }),
     EngineerModule,
+    AxiosModule,
   ],
-  providers: [Reflector],
+  providers: [Reflector, { provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class AppModule {}
