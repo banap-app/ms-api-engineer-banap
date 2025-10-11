@@ -11,6 +11,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiSecurity } from '@nestjs/swagger';
 import { CreateEngineerUseCase } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer';
 import { CreateEngineerCommand } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer-command';
 import { DeleteEngineerUseCase } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer';
@@ -21,6 +22,7 @@ import { ValidateEngineerUseCase } from 'src/core/engineer/application/use-cases
 import { UpdateEngineerUseCase } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer';
 import { UpdateEngineerCommand } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer-command';
 import { ProfilePicture } from 'src/core/engineer/domain/profile-picture-vo';
+import { Public } from '../guards/auth/public.decorator';
 import { CreateEngineerDto } from './dto/create-engineer.dto';
 import { UpdateEngineerDto } from './dto/update-engineer.dto';
 import {
@@ -42,6 +44,7 @@ export class EngineerController {
   ) {}
 
   @SwaggerCreateEngineer()
+  @Public()
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createEngineerDto: CreateEngineerDto) {
@@ -74,6 +77,7 @@ export class EngineerController {
   }
 
   @SwaggerGetEngineer()
+  @ApiSecurity('token')
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async get(@Param('id') id: string) {
@@ -82,6 +86,7 @@ export class EngineerController {
   }
 
   @SwaggerValidateEngineer()
+  @ApiSecurity('token')
   @Get(':id/validate')
   @HttpCode(HttpStatus.OK)
   async validate(@Param('id') id: string) {
@@ -100,6 +105,7 @@ export class EngineerController {
   }
 
   @SwaggerUpdateEngineer()
+  @ApiSecurity('token')
   @Patch(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async update(
@@ -135,6 +141,7 @@ export class EngineerController {
   }
 
   @SwaggerDeleteEngineer()
+  @ApiSecurity('token')
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string) {

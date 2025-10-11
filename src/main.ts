@@ -17,6 +17,14 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('BANAP Engineer API')
     .setVersion('1.0')
+    .addApiKey(
+      {
+        type: 'apiKey',
+        name: 'Authorization',
+        in: 'header',
+      },
+      'token',
+    )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
