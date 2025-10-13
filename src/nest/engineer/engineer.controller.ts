@@ -10,6 +10,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
 } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
 import { CreateEngineerUseCase } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer';
@@ -78,9 +79,10 @@ export class EngineerController {
 
   @SwaggerGetEngineer()
   @ApiSecurity('token')
-  @Get(':id')
+  @Get()
   @HttpCode(HttpStatus.OK)
-  async get(@Param('id') id: string) {
+  async get(@Req() req) {
+    const id = req.user.id;
     const command = new GetEngineerCommand(id);
     return this.getEngineerUseCase.execute(command);
   }
@@ -106,12 +108,11 @@ export class EngineerController {
 
   @SwaggerUpdateEngineer()
   @ApiSecurity('token')
-  @Patch(':id')
+  @Patch()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async update(
-    @Param('id') id: string,
-    @Body() updateEngineerDto: UpdateEngineerDto,
-  ) {
+  async update(@Req() req, @Body() updateEngineerDto: UpdateEngineerDto) {
+    const id = req.user.id;
+
     if (!updateEngineerDto) {
       throw new BadRequestException('No data provided');
     }
@@ -142,9 +143,10 @@ export class EngineerController {
 
   @SwaggerDeleteEngineer()
   @ApiSecurity('token')
-  @Delete(':id')
+  @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param('id') id: string) {
+  async delete(@Req() req) {
+    const id = req.user.id;
     const command = new DeleteEngineerCommand(id);
     return this.deleteEngineerUseCase.execute(command);
   }

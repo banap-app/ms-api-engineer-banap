@@ -63,12 +63,6 @@ export function SwaggerGetEngineer() {
       summary: 'Get engineer',
       description: 'Get a existing active user in the system',
     }),
-    ApiParam({
-      name: 'id',
-      type: 'string',
-      description: 'Engineer ID',
-      required: true,
-    }),
     ApiResponse({
       status: 200,
       description: 'Engineer found',
@@ -147,12 +141,6 @@ export function SwaggerUpdateEngineer() {
       description: 'Update engineer payload',
       type: UpdateEngineerDto,
     }),
-    ApiParam({
-      name: 'id',
-      type: 'string',
-      description: 'Engineer ID',
-      required: true,
-    }),
     ApiResponse({
       status: 204,
       description: 'Engineer updated succesfully',
@@ -198,12 +186,6 @@ export function SwaggerDeleteEngineer() {
     ApiOperation({
       summary: 'Delete engineer',
       description: 'Soft deletes a engineer',
-    }),
-    ApiParam({
-      name: 'id',
-      type: 'string',
-      description: 'Engineer ID',
-      required: true,
     }),
     ApiResponse({
       status: 204,
