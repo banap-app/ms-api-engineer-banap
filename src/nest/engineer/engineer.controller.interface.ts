@@ -18,16 +18,21 @@ export function SwaggerCreateEngineer() {
       description: 'Engineer created successfully',
       schema: {
         example: {
-          id: '8815433c-1eaa-448d-a6ed-de9635099fd2',
-          name: 'John Doe',
-          email: 'john.doe@example.com',
-          profilePicture: 'https://example.com/profile.jpg',
-          crea: '123456-SP',
-          userType: 1,
-          isActive: true,
-          createdAt: '2025-10-01T12:00:00Z',
-          updatedAt: '2025-10-01T12:00:00Z',
-          deletedAt: null,
+          statusCode: 201,
+          message: 'Engineer created successfully',
+          data: {
+            id: '8815433c-1eaa-448d-a6ed-de9635099fd2',
+            name: 'John Doe',
+            email: 'john.doe@example.com',
+            profilePicture: 'https://example.com/profile.jpg',
+            crea: '123456-SP',
+            userType: 1,
+            isActive: true,
+            createdAt: '2025-10-01T12:00:00Z',
+            updatedAt: '2025-10-01T12:00:00Z',
+            deletedAt: null,
+          },
+          metadata: {},
         },
       },
     }),
@@ -36,21 +41,16 @@ export function SwaggerCreateEngineer() {
       description: 'Validation error',
       schema: {
         example: {
+          statusCode: 400,
           message: 'Entity Validation Error',
           errors: [
-            {
-              name: ['name should not be empty'],
-            },
-            {
-              email: ['email already in use'],
-            },
-            {
-              password: ['invalid password'],
-            },
-            {
-              crea: ['crea already registered'],
-            },
+            { name: ['name should not be empty'] },
+            { email: ['email already in use'] },
+            { password: ['invalid password'] },
+            { crea: ['crea already registered'] },
           ],
+          timestamp: '2025-10-14T00:00:00Z',
+          path: '/engineer',
         },
       },
     }),
@@ -68,16 +68,21 @@ export function SwaggerGetEngineer() {
       description: 'Engineer found',
       schema: {
         example: {
-          id: '8815433c-1eaa-448d-a6ed-de9635099fd2',
-          name: 'John Doe',
-          email: 'john.doe@example.com',
-          profilePicture: 'https://example.com/profile.jpg',
-          crea: '123456-SP',
-          userType: 1,
-          isActive: true,
-          createdAt: '2025-10-01T12:00:00Z',
-          updatedAt: '2025-10-01T12:00:00Z',
-          deletedAt: null,
+          statusCode: 200,
+          message: 'Engineer found',
+          data: {
+            id: '8815433c-1eaa-448d-a6ed-de9635099fd2',
+            name: 'John Doe',
+            email: 'john.doe@example.com',
+            profilePicture: 'https://example.com/profile.jpg',
+            crea: '123456-SP',
+            userType: 1,
+            isActive: true,
+            createdAt: '2025-10-01T12:00:00Z',
+            updatedAt: '2025-10-01T12:00:00Z',
+            deletedAt: null,
+          },
+          metadata: {},
         },
       },
     }),
@@ -88,6 +93,9 @@ export function SwaggerGetEngineer() {
         example: {
           statusCode: 400,
           message: 'invalid UUID',
+          errors: [],
+          timestamp: '2025-10-14T00:00:00Z',
+          path: '/engineer',
         },
       },
     }),
@@ -98,6 +106,9 @@ export function SwaggerGetEngineer() {
         example: {
           statusCode: 404,
           message: 'user not found',
+          errors: [],
+          timestamp: '2025-10-14T00:00:00Z',
+          path: '/engineer',
         },
       },
     }),
@@ -118,14 +129,24 @@ export function SwaggerValidateEngineer() {
     }),
     ApiResponse({
       status: 200,
-      example: {
-        success: true,
+      schema: {
+        example: {
+          statusCode: 200,
+          message: 'Validation result',
+          data: { exists: true },
+        },
       },
     }),
     ApiResponse({
       status: 404,
-      example: {
-        success: false,
+      schema: {
+        example: {
+          statusCode: 404,
+          message: 'Engineer not found',
+          errors: [],
+          timestamp: '2025-10-14T00:00:00Z',
+          path: '/engineer/{id}/validate',
+        },
       },
     }),
   );
@@ -150,21 +171,16 @@ export function SwaggerUpdateEngineer() {
       description: 'Validation error',
       schema: {
         example: {
+          statusCode: 400,
           message: 'Entity Validation Error',
           errors: [
-            {
-              name: ['name should not be empty'],
-            },
-            {
-              email: ['email already in use'],
-            },
-            {
-              password: ['invalid password'],
-            },
-            {
-              crea: ['crea already registered'],
-            },
+            { name: ['name should not be empty'] },
+            { email: ['email already in use'] },
+            { password: ['invalid password'] },
+            { crea: ['crea already registered'] },
           ],
+          timestamp: '2025-10-14T00:00:00Z',
+          path: '/engineer',
         },
       },
     }),
@@ -175,6 +191,9 @@ export function SwaggerUpdateEngineer() {
         example: {
           statusCode: 404,
           message: 'user not found',
+          errors: [],
+          timestamp: '2025-10-14T00:00:00Z',
+          path: '/engineer',
         },
       },
     }),
@@ -198,6 +217,9 @@ export function SwaggerDeleteEngineer() {
         example: {
           statusCode: 400,
           message: 'invalid UUID',
+          errors: [],
+          timestamp: '2025-10-14T00:00:00Z',
+          path: '/engineer',
         },
       },
     }),
@@ -208,6 +230,9 @@ export function SwaggerDeleteEngineer() {
         example: {
           statusCode: 404,
           message: 'user not found',
+          errors: [],
+          timestamp: '2025-10-14T00:00:00Z',
+          path: '/engineer',
         },
       },
     }),

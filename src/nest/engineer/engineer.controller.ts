@@ -13,6 +13,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
+import { EngineerOutput } from 'src/core/engineer/application/commons/engineer-output-mapper';
 import { CreateEngineerUseCase } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer';
 import { CreateEngineerCommand } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer-command';
 import { DeleteEngineerUseCase } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer';
@@ -23,6 +24,7 @@ import { ValidateEngineerUseCase } from 'src/core/engineer/application/use-cases
 import { UpdateEngineerUseCase } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer';
 import { UpdateEngineerCommand } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer-command';
 import { ProfilePicture } from 'src/core/engineer/domain/profile-picture-vo';
+import { ApiResponse } from 'src/core/shared/domain/response/api-response';
 import { Public } from '../guards/auth/public.decorator';
 import { CreateEngineerDto } from './dtos/create-engineer.dto';
 import { UpdateEngineerDto } from './dtos/update-engineer.dto';
@@ -48,7 +50,9 @@ export class EngineerController {
   @Public()
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createEngineerDto: CreateEngineerDto) {
+  async create(
+    @Body() createEngineerDto: CreateEngineerDto,
+  ): Promise<ApiResponse<EngineerOutput>> {
     if (!createEngineerDto) {
       throw new BadRequestException('No data provided');
     }
@@ -74,35 +78,55 @@ export class EngineerController {
       profilePicture,
       crea: createEngineerDto.crea,
     });
-    return this.createEngineerUseCase.execute(command);
+
+    const result = await this.createEngineerUseCase.execute(command);
+
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: 'Engineer created successfully',
+      data: result,
+    };
   }
 
   @SwaggerGetEngineer()
   @ApiSecurity('token')
   @Get()
   @HttpCode(HttpStatus.OK)
-  async get(@Req() req) {
+  async get(@Req() req): Promise<ApiResponse<EngineerOutput>> {
     const id = req.user.id;
     const command = new GetEngineerCommand(id);
-    return this.getEngineerUseCase.execute(command);
+
+    const result = await this.getEngineerUseCase.execute(command);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Engineer retrieved successfully',
+      data: result,
+    };
   }
 
   @SwaggerValidateEngineer()
   @ApiSecurity('token')
   @Get(':id/validate')
   @HttpCode(HttpStatus.OK)
-  async validate(@Param('id') id: string) {
+  async validate(
+    @Param('id') id: string,
+  ): Promise<ApiResponse<{ exists: boolean }>> {
     const command = new GetEngineerCommand(id);
     const exists = await this.validateEngineerUseCase.execute(command);
 
     if (!exists) {
       throw new NotFoundException({
-        success: false,
+        statusCode: HttpStatus.NOT_FOUND,
+        message: 'Engineer not found',
+        errors: [],
       });
     }
 
     return {
-      success: true,
+      statusCode: HttpStatus.OK,
+      message: 'Validation result',
+      data: { exists: true },
     };
   }
 
@@ -110,7 +134,10 @@ export class EngineerController {
   @ApiSecurity('token')
   @Patch()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async update(@Req() req, @Body() updateEngineerDto: UpdateEngineerDto) {
+  async update(
+    @Req() req,
+    @Body() updateEngineerDto: UpdateEngineerDto,
+  ): Promise<void> {
     const id = req.user.id;
 
     if (!updateEngineerDto) {
@@ -138,16 +165,16 @@ export class EngineerController {
       profilePicture,
       crea: updateEngineerDto.crea,
     });
-    return this.updateEngineerUseCase.execute(command);
+    await this.updateEngineerUseCase.execute(command);
   }
 
   @SwaggerDeleteEngineer()
   @ApiSecurity('token')
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Req() req) {
+  async delete(@Req() req): Promise<void> {
     const id = req.user.id;
     const command = new DeleteEngineerCommand(id);
-    return this.deleteEngineerUseCase.execute(command);
+    await this.deleteEngineerUseCase.execute(command);
   }
 }
