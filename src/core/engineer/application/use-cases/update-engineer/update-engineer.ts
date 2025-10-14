@@ -66,11 +66,6 @@ export class UpdateEngineerUseCase
       engineer.changeName(aCommand.name);
     }
 
-    if (aCommand.password) {
-      const hashed = await this.hashService.encode(aCommand.password, 10);
-      engineer.changeHashedPassword(hashed);
-    }
-
     if (aCommand.profilePicture) {
       engineer.changeProfilePicture(aCommand.profilePicture);
     }

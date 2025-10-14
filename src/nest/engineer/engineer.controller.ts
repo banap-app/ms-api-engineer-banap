@@ -24,8 +24,8 @@ import { UpdateEngineerUseCase } from 'src/core/engineer/application/use-cases/u
 import { UpdateEngineerCommand } from 'src/core/engineer/application/use-cases/update-engineer/update-engineer-command';
 import { ProfilePicture } from 'src/core/engineer/domain/profile-picture-vo';
 import { Public } from '../guards/auth/public.decorator';
-import { CreateEngineerDto } from './dto/create-engineer.dto';
-import { UpdateEngineerDto } from './dto/update-engineer.dto';
+import { CreateEngineerDto } from './dtos/create-engineer.dto';
+import { UpdateEngineerDto } from './dtos/update-engineer.dto';
 import {
   SwaggerCreateEngineer,
   SwaggerDeleteEngineer,

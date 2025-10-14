@@ -13,11 +13,6 @@ export class UpdateEngineerDto {
   @IsEmail()
   email?: string;
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  password?: string;
-
   @ApiPropertyOptional({
     type: ProfilePictureDto,
     description: 'Profile picture',

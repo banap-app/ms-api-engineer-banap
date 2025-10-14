@@ -51,7 +51,6 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
 
     engineer.name = entity.name;
     engineer.email = entity.email;
-    engineer.password = entity.password.value;
     engineer.is_active = entity.isActive;
     engineer.updated_at = new Date();
     engineer.deleted_at = entity.deletedAt;

@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
-import { CreateEngineerDto } from './dto/create-engineer.dto';
-import { UpdateEngineerDto } from './dto/update-engineer.dto';
+import { CreateEngineerDto } from './dtos/create-engineer.dto';
+import { UpdateEngineerDto } from './dtos/update-engineer.dto';
 
 export function SwaggerCreateEngineer() {
   return applyDecorators(
