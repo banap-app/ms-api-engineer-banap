@@ -38,10 +38,6 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
     }
   }
 
-  async bulkInsert(entities: Engineer[]): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-
   async update(entity: Engineer): Promise<void> {
     const engineer = await this.ormRepository.findOneBy({
       id: entity.id.uuid,
@@ -84,16 +80,6 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
       }
       await this.creaRepository.save(crea);
     }
-  }
-
-  async bulkUpdate(entities: Engineer[]): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  async delete(entity_id: EngineerId): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  async bulkDelete(entities_id: EngineerId[]): Promise<void> {
-    throw new Error('Method not implemented.');
   }
 
   async findById(entity_id: EngineerId): Promise<Engineer | null> {
@@ -140,5 +126,18 @@ export class EngineerTypeOrmRepository implements EngineerRepository {
     });
 
     return !!existing;
+  }
+
+  async bulkInsert(entities: Engineer[]): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  async bulkUpdate(entities: Engineer[]): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  async delete(entity_id: EngineerId): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  async bulkDelete(entities_id: EngineerId[]): Promise<void> {
+    throw new Error('Method not implemented.');
   }
 }

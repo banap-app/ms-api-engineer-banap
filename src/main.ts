@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './nest/app.module';
+import { DatabaseErrorFilter } from './nest/filters/database-error.filter';
 import { EntityValidationFilter } from './nest/filters/entity-validation.filter';
 import { InvalidUuidFilter } from './nest/filters/invalid-uuid.filter';
 import { NotFoundFilter } from './nest/filters/not-found.filter';
@@ -11,6 +12,7 @@ async function bootstrap() {
   app.useGlobalFilters(new EntityValidationFilter());
   app.useGlobalFilters(new NotFoundFilter());
   app.useGlobalFilters(new InvalidUuidFilter());
+  app.useGlobalFilters(new DatabaseErrorFilter());
 
   app.setGlobalPrefix('api');
 
