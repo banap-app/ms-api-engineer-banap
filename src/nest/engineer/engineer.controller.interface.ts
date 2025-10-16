@@ -238,3 +238,42 @@ export function SwaggerDeleteEngineer() {
     }),
   );
 }
+
+export function SwaggerAssociateProducer() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Associate producer',
+      description:
+        'Sends an invitation to associate a producer with an engineer',
+    }),
+    ApiBody({
+      schema: {
+        type: 'object',
+        required: ['recipientEmail'],
+        properties: {
+          recipientEmail: {
+            type: 'string',
+            format: 'email',
+            description: "Producer's email address",
+          },
+        },
+      },
+    }),
+    ApiResponse({
+      status: 204,
+      description: 'Invitation sent successfully',
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'Engineer not found',
+      schema: {
+        example: {
+          statusCode: 404,
+          message: 'engineer not found',
+          timestamp: '2024-03-14T00:00:00Z',
+          path: '/engineer/associate-producer',
+        },
+      },
+    }),
+  );
+}

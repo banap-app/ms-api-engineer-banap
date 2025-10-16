@@ -14,6 +14,8 @@ import {
 } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
 import { EngineerOutput } from 'src/core/engineer/application/commons/engineer-output-mapper';
+import { AssociateProducerCommand } from 'src/core/engineer/application/use-cases/associate-producer/associate-producer-command';
+import { AssociateProducerUseCase } from 'src/core/engineer/application/use-cases/associate-producer/associate-producer-use-case';
 import { CreateEngineerUseCase } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer';
 import { CreateEngineerCommand } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer-command';
 import { DeleteEngineerUseCase } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer';
@@ -29,6 +31,7 @@ import { Public } from '../guards/auth/public.decorator';
 import { CreateEngineerDto } from './dtos/create-engineer.dto';
 import { UpdateEngineerDto } from './dtos/update-engineer.dto';
 import {
+  SwaggerAssociateProducer,
   SwaggerCreateEngineer,
   SwaggerDeleteEngineer,
   SwaggerGetEngineer,
@@ -44,6 +47,7 @@ export class EngineerController {
     private readonly validateEngineerUseCase: ValidateEngineerUseCase,
     private readonly updateEngineerUseCase: UpdateEngineerUseCase,
     private readonly deleteEngineerUseCase: DeleteEngineerUseCase,
+    private readonly associateProducerUseCase: AssociateProducerUseCase,
   ) {}
 
   @SwaggerCreateEngineer()
@@ -176,5 +180,18 @@ export class EngineerController {
     const id = req.user.id;
     const command = new DeleteEngineerCommand(id);
     await this.deleteEngineerUseCase.execute(command);
+  }
+
+  @SwaggerAssociateProducer()
+  @ApiSecurity('token')
+  @Post('associate-producer')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async inviteProducer(
+    @Req() req,
+    @Body('recipientEmail') recipientEmail: string,
+  ): Promise<void> {
+    const senderId = req.user.id;
+    const command = new AssociateProducerCommand(recipientEmail, senderId);
+    await this.associateProducerUseCase.execute(command);
   }
 }

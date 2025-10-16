@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { AssociateProducerUseCase } from 'src/core/engineer/application/use-cases/associate-producer/associate-producer-use-case';
 import { CreateEngineerUseCase } from 'src/core/engineer/application/use-cases/create-engineer/create-engineer';
 import { DeleteEngineerUseCase } from 'src/core/engineer/application/use-cases/delete-engineer/delete-engineer';
 import { GetEngineerUseCase } from 'src/core/engineer/application/use-cases/retrieve-engineer/get-engineer';
@@ -11,13 +12,26 @@ import {
 } from 'src/core/engineer/infrastructure/db/typeorm/engineer-entity';
 import { EngineerTypeOrmRepository } from 'src/core/engineer/infrastructure/db/typeorm/engineer-typeorm-repository';
 import { BcryptService } from 'src/core/engineer/infrastructure/services/bcrypt-service';
+import { RabbitMQEventPublisher } from 'src/core/engineer/infrastructure/services/rabbitmq-event-publisher.ts';
 import { Repository } from 'typeorm';
+import { RabbitMQModule } from '../common/rabbitmq/rabbitmq.module';
+import { RabbitMQService } from '../common/rabbitmq/rabbitmq.service';
 import { EngineerController } from './engineer.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([EngineerEntity, CreaEntity])],
+  imports: [
+    TypeOrmModule.forFeature([EngineerEntity, CreaEntity]),
+    RabbitMQModule,
+  ],
   controllers: [EngineerController],
   providers: [
+    {
+      provide: RabbitMQEventPublisher,
+      useFactory: (rabbitMQService: RabbitMQService) => {
+        return new RabbitMQEventPublisher(rabbitMQService);
+      },
+      inject: [RabbitMQService],
+    },
     BcryptService,
     {
       provide: EngineerTypeOrmRepository,
@@ -66,6 +80,16 @@ import { EngineerController } from './engineer.controller';
         return new DeleteEngineerUseCase(repo);
       },
       inject: [EngineerTypeOrmRepository],
+    },
+    {
+      provide: AssociateProducerUseCase,
+      useFactory: (
+        repo: EngineerTypeOrmRepository,
+        eventPublisher: RabbitMQEventPublisher,
+      ) => {
+        return new AssociateProducerUseCase(repo, eventPublisher);
+      },
+      inject: [EngineerTypeOrmRepository, RabbitMQEventPublisher],
     },
   ],
   exports: [EngineerTypeOrmRepository],
