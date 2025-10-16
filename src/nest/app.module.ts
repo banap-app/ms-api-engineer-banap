@@ -9,7 +9,9 @@ import {
   UserTypeEntity,
 } from 'src/core/engineer/infrastructure/db/typeorm/engineer-entity';
 import { AxiosModule } from './common/axios/axios.module';
+import { RabbitMQModule } from './common/rabbitmq/rabbitmq.module';
 import httpConfig from './config/http.config';
+import rabbitmqConfig from './config/rabbitmq.config';
 import { EngineerModule } from './engineer/engineer.module';
 import { AuthGuard } from './guards/auth/auth.guard';
 
@@ -18,7 +20,7 @@ import { AuthGuard } from './guards/auth/auth.guard';
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
-      load: [httpConfig],
+      load: [httpConfig, rabbitmqConfig],
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -37,6 +39,7 @@ import { AuthGuard } from './guards/auth/auth.guard';
     }),
     EngineerModule,
     AxiosModule,
+    RabbitMQModule,
   ],
   providers: [Reflector, { provide: APP_GUARD, useClass: AuthGuard }],
 })
