@@ -28,6 +28,7 @@ import { UpdateEngineerCommand } from 'src/core/engineer/application/use-cases/u
 import { ProfilePicture } from 'src/core/engineer/domain/profile-picture-vo';
 import { ApiResponse } from 'src/core/shared/domain/response/api-response';
 import { Public } from '../guards/auth/public.decorator';
+import { AssociateProducerDto } from './dtos/associate-producter.dto';
 import { CreateEngineerDto } from './dtos/create-engineer.dto';
 import { UpdateEngineerDto } from './dtos/update-engineer.dto';
 import {
@@ -188,10 +189,13 @@ export class EngineerController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async inviteProducer(
     @Req() req,
-    @Body('recipientEmail') recipientEmail: string,
+    @Body() associateProducerDto: AssociateProducerDto,
   ): Promise<void> {
     const senderId = req.user.id;
-    const command = new AssociateProducerCommand(recipientEmail, senderId);
+    const command = new AssociateProducerCommand(
+      associateProducerDto.recipientEmail,
+      senderId,
+    );
     await this.associateProducerUseCase.execute(command);
   }
 }

@@ -8,6 +8,7 @@ import {
   ProfilePictureEntity,
   UserTypeEntity,
 } from 'src/core/engineer/infrastructure/db/typeorm/engineer-entity';
+import { NotificationEntity } from 'src/core/notification/infrastructure/db/typeorm/notification-entity';
 import { AxiosModule } from './common/axios/axios.module';
 import { RabbitMQModule } from './common/rabbitmq/rabbitmq.module';
 import httpConfig from './config/http.config';
@@ -26,14 +27,15 @@ import { AuthGuard } from './guards/auth/auth.guard';
       type: 'postgres',
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
       database: process.env.DB_NAME,
       entities: [
         EngineerEntity,
         CreaEntity,
         ProfilePictureEntity,
         UserTypeEntity,
+        NotificationEntity,
       ],
       synchronize: false, // false in prod
     }),

@@ -13,6 +13,8 @@ import {
 import { EngineerTypeOrmRepository } from 'src/core/engineer/infrastructure/db/typeorm/engineer-typeorm-repository';
 import { BcryptService } from 'src/core/engineer/infrastructure/services/bcrypt-service';
 import { RabbitMQEventPublisher } from 'src/core/engineer/infrastructure/services/rabbitmq-event-publisher.ts';
+import { NotificationEntity } from 'src/core/notification/infrastructure/db/typeorm/notification-entity';
+import { NotificationTypeOrmRepository } from 'src/core/notification/infrastructure/db/typeorm/notification-typeorm-repository';
 import { Repository } from 'typeorm';
 import { RabbitMQModule } from '../common/rabbitmq/rabbitmq.module';
 import { RabbitMQService } from '../common/rabbitmq/rabbitmq.service';
@@ -20,7 +22,7 @@ import { EngineerController } from './engineer.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([EngineerEntity, CreaEntity]),
+    TypeOrmModule.forFeature([EngineerEntity, CreaEntity, NotificationEntity]),
     RabbitMQModule,
   ],
   controllers: [EngineerController],
@@ -45,6 +47,13 @@ import { EngineerController } from './engineer.controller';
         getRepositoryToken(EngineerEntity),
         getRepositoryToken(CreaEntity),
       ],
+    },
+    {
+      provide: NotificationTypeOrmRepository,
+      useFactory: (repo: Repository<NotificationEntity>) => {
+        return new NotificationTypeOrmRepository(repo);
+      },
+      inject: [getRepositoryToken(NotificationEntity)],
     },
     {
       provide: CreateEngineerUseCase,
@@ -84,12 +93,21 @@ import { EngineerController } from './engineer.controller';
     {
       provide: AssociateProducerUseCase,
       useFactory: (
-        repo: EngineerTypeOrmRepository,
+        engineerRepo: EngineerTypeOrmRepository,
+        notificationRepo: NotificationTypeOrmRepository,
         eventPublisher: RabbitMQEventPublisher,
       ) => {
-        return new AssociateProducerUseCase(repo, eventPublisher);
+        return new AssociateProducerUseCase(
+          engineerRepo,
+          notificationRepo,
+          eventPublisher,
+        );
       },
-      inject: [EngineerTypeOrmRepository, RabbitMQEventPublisher],
+      inject: [
+        EngineerTypeOrmRepository,
+        NotificationTypeOrmRepository,
+        RabbitMQEventPublisher,
+      ],
     },
   ],
   exports: [EngineerTypeOrmRepository],

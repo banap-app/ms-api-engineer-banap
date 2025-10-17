@@ -1,5 +1,10 @@
 import { EngineerId } from 'src/core/engineer/domain/engineer';
 import { EngineerRepository } from 'src/core/engineer/domain/engineer-repository';
+import {
+  Notification,
+  NotificationType,
+} from 'src/core/notification/domain/notification';
+import { NotificationRepository } from 'src/core/notification/domain/notification-repository';
 import { EventPublisher } from 'src/core/shared/application/event-publisher';
 import { UseCase } from 'src/core/shared/application/use-case';
 import { NotFoundError } from 'src/core/shared/domain/errors/not-found-error';
@@ -12,6 +17,7 @@ export class AssociateProducerUseCase
 {
   constructor(
     private readonly engineerRepository: EngineerRepository,
+    private readonly notificationRepository: NotificationRepository,
     private readonly eventPublisher: EventPublisher,
   ) {}
 
@@ -25,16 +31,20 @@ export class AssociateProducerUseCase
       throw new NotFoundError('engineer');
     }
 
-    const message = {
+    const recipientId = '';
+
+    const notification = Notification.create({
+      recipientId: recipientId,
       senderId: aCommand.senderId,
-      recipientEmail: aCommand.recipientEmail,
-      timestamp: new Date().toISOString(),
-    };
+      notificationType: NotificationType.INVITE,
+    });
+
+    await this.notificationRepository.insert(notification);
 
     await this.eventPublisher.publishMessage(
       'notification_exchange',
       'notification.producer.invite',
-      message,
+      notification.toJSON(),
     );
   }
 }

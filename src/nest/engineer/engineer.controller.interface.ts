@@ -1,5 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { AssociateProducerDto } from './dtos/associate-producter.dto';
 import { CreateEngineerDto } from './dtos/create-engineer.dto';
 import { UpdateEngineerDto } from './dtos/update-engineer.dto';
 
@@ -247,17 +248,8 @@ export function SwaggerAssociateProducer() {
         'Sends an invitation to associate a producer with an engineer',
     }),
     ApiBody({
-      schema: {
-        type: 'object',
-        required: ['recipientEmail'],
-        properties: {
-          recipientEmail: {
-            type: 'string',
-            format: 'email',
-            description: "Producer's email address",
-          },
-        },
-      },
+      description: "Producer's email",
+      type: AssociateProducerDto,
     }),
     ApiResponse({
       status: 204,
