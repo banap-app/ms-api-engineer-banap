@@ -1,0 +1,75 @@
+name: Deploy Engineer App
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    env:
+      DB_HOST: stormforge.lan
+      DB_PORT: '5432'
+      DB_USER: Green
+      DB_PASSWORD: StormForge01
+      DB_NAME: banap_database
+      REDIS_HOST: stormforge.lan
+      HTTP_BASE_URL: http://stormforge.lan:8192
+      PRODUCER_BASE_URL: http://stormforge.lan:3000
+      RABBITMQ_URL: amqp://banap:StormForge01@stormforge.lan:5672
+      REDIS_PORT: 6379
+      REDIS_USER: default
+      REDIS_PASSWORD: StormForge01
+      TIME_TO_EXPIRE_CACHE: 300
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reset repo no servidor (descarta alterações locais)
+        run: |
+          cd /var/banap/ms_engineer_banap
+          git fetch origin main --prune
+          git reset --hard origin/main
+          git clean -fdx
+
+      - name: Instalar dependências
+        run: |
+          cd /var/banap/ms_engineer_banap
+          npm ci
+
+      - name: Build app
+        run: |
+          cd /var/banap/ms_engineer_banap
+          npm run build
+
+      - name: (Re)subir com PM2 e injetar ENV
+        run: |
+          cd /var/banap/ms_engineer_banap
+
+          echo "DB_HOST=$DB_HOST DB_PORT=$DB_PORT DB_USER=$DB_USER DB_PASSWORD=**** DB_NAME=$DB_NAME"
+          echo "REDIS_HOST=$REDIS_HOST REDIS_PORT=$REDIS_PORT REDIS_USER=$REDIS_USER REDIS_PASSWORD=****"
+          echo "HTTP_BASE_URL=$HTTP_BASE_URL PRODUCER_BASE_URL=$PRODUCER_BASE_URL RABBITMQ_URL=$RABBITMQ_URL TIME_TO_EXPIRE_CACHE=$TIME_TO_EXPIRE_CACHE"
+
+          if pm2 describe ms_engineer_banap >/dev/null 2>&1; then
+            pm2 restart ms_engineer_banap --update-env
+          else
+            # Injeta TODAS as ENV na criação do processo:
+            DB_HOST="$DB_HOST" \
+            DB_PORT="$DB_PORT" \
+            DB_USER="$DB_USER" \
+            DB_PASSWORD="$DB_PASSWORD" \
+            DB_NAME="$DB_NAME" \
+            REDIS_HOST="$REDIS_HOST" \
+            REDIS_PORT="$REDIS_PORT" \
+            REDIS_USER="$REDIS_USER" \
+            REDIS_PASSWORD="$REDIS_PASSWORD" \
+            HTTP_BASE_URL="$HTTP_BASE_URL" \
+            PRODUCER_BASE_URL="$PRODUCER_BASE_URL" \
+            RABBITMQ_URL="$RABBITMQ_URL" \
+            TIME_TO_EXPIRE_CACHE="$TIME_TO_EXPIRE_CACHE" \
+            pm2 start dist/main.js \
+              --name ms_engineer_banap \
+              --cwd /var/banap/ms_engineer_banap
+          fi
+
+          pm2 save
