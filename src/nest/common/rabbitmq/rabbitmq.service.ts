@@ -18,6 +18,7 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
     try {
       await this.connect();
+      this.logger.log('Successfully connected to RabbitMQ');
     } catch (error) {
       this.logger.error('Failed to connect to RabbitMQ on startup');
     }

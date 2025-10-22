@@ -34,6 +34,7 @@ export class AuthGuard implements CanActivate {
     req.user = {
       id: response.data.decodedToken,
     };
+    req.token = authHeader;
 
     return true;
   }

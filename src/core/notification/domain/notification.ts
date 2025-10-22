@@ -113,9 +113,9 @@ export class Notification extends Entity {
 
   toJSON() {
     return {
-      notificationId: this._notificationId,
-      recipientId: this._recipientId,
-      senderId: this._senderId,
+      notificationId: this._notificationId.uuid,
+      recipientId: this._recipientId.uuid,
+      senderId: this._senderId.uuid,
       notificationType: this._notificationType,
       message: this._message,
       status: this._status,

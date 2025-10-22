@@ -6,10 +6,10 @@ import {
 } from 'src/core/notification/domain/notification';
 import { NotificationRepository } from 'src/core/notification/domain/notification-repository';
 import { EventPublisher } from 'src/core/shared/application/event-publisher';
+import { HttpClient } from 'src/core/shared/application/http-client';
 import { UseCase } from 'src/core/shared/application/use-case';
 import { NotFoundError } from 'src/core/shared/domain/errors/not-found-error';
 import { AssociateProducerCommand } from './associate-producer-command';
-import { HttpClient } from 'src/core/shared/application/http-client';
 
 export type AssociateProducerOutput = void;
 
@@ -36,8 +36,10 @@ export class AssociateProducerUseCase
     const response = await this.httpClient.get<{ id: string }>(
       `/producer/exists/${aCommand.recipientEmail}`,
       {
-        baseURL: '',
-        headers: {},
+        baseURL: process.env.PRODUCER_BASE_URL,
+        headers: {
+          Authorization: aCommand.authToken,
+        },
       },
     );
 

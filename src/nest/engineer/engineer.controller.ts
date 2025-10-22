@@ -191,10 +191,12 @@ export class EngineerController {
     @Req() req,
     @Body() associateProducerDto: AssociateProducerDto,
   ): Promise<void> {
+    const authToken = req.token;
     const senderId = req.user.id;
     const command = new AssociateProducerCommand(
       associateProducerDto.recipientEmail,
       senderId,
+      authToken,
     );
     await this.associateProducerUseCase.execute(command);
   }
