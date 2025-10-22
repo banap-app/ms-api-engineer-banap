@@ -17,4 +17,12 @@ export class AxiosService {
     this.logger.debug(`POST ${url}`);
     return firstValueFrom(this.http.post<T>(url, data, config));
   }
+
+  async get<T = any>(
+    url: string,
+    config?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<T>> {
+    this.logger.debug(`GET ${url}`);
+    return firstValueFrom(this.http.get<T>(url, config));
+  }
 }

@@ -39,9 +39,7 @@ export class EngineerEntityMapper {
             location: engineerEntity.profile_picture.location,
           })
         : null,
-      crea: options?.creaEntity
-        ? options.creaEntity.toVo()
-        : CREA.createWithValidation(''),
+      crea: options?.creaEntity ? options.creaEntity.toVo() : null,
       userType: engineerEntity.user_type.id,
       isActive: engineerEntity.is_active,
       createdAt: engineerEntity.created_at,

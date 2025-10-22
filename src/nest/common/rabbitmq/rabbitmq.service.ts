@@ -1,4 +1,9 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as amqp from 'amqplib';
 
@@ -6,11 +11,16 @@ import * as amqp from 'amqplib';
 export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
   private connection: amqp.Connection;
   private channel: amqp.Channel;
+  private readonly logger = new Logger(RabbitMQService.name);
 
   constructor(private readonly configService: ConfigService) {}
 
   async onModuleInit() {
-    await this.connect();
+    try {
+      await this.connect();
+    } catch (error) {
+      this.logger.error('Failed to connect to RabbitMQ on startup');
+    }
   }
 
   async onModuleDestroy() {
