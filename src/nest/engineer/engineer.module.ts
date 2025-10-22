@@ -19,14 +19,25 @@ import { Repository } from 'typeorm';
 import { RabbitMQModule } from '../common/rabbitmq/rabbitmq.module';
 import { RabbitMQService } from '../common/rabbitmq/rabbitmq.service';
 import { EngineerController } from './engineer.controller';
+import { AxiosService } from '../common/axios/axios.service';
+import { AxiosHttpClient } from 'src/core/engineer/infrastructure/services/axios-http-client';
+import { AxiosModule } from '../common/axios/axios.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([EngineerEntity, CreaEntity, NotificationEntity]),
     RabbitMQModule,
+    AxiosModule,
   ],
   controllers: [EngineerController],
   providers: [
+    {
+      provide: AxiosHttpClient,
+      useFactory: (axiosService: AxiosService) => {
+        return new AxiosHttpClient(axiosService);
+      },
+      inject: [AxiosService],
+    },
     {
       provide: RabbitMQEventPublisher,
       useFactory: (rabbitMQService: RabbitMQService) => {
@@ -96,17 +107,20 @@ import { EngineerController } from './engineer.controller';
         engineerRepo: EngineerTypeOrmRepository,
         notificationRepo: NotificationTypeOrmRepository,
         eventPublisher: RabbitMQEventPublisher,
+        httpClient: AxiosHttpClient,
       ) => {
         return new AssociateProducerUseCase(
           engineerRepo,
           notificationRepo,
           eventPublisher,
+          httpClient,
         );
       },
       inject: [
         EngineerTypeOrmRepository,
         NotificationTypeOrmRepository,
         RabbitMQEventPublisher,
+        AxiosHttpClient,
       ],
     },
   ],

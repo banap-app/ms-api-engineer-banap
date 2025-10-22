@@ -9,6 +9,7 @@ import { EventPublisher } from 'src/core/shared/application/event-publisher';
 import { UseCase } from 'src/core/shared/application/use-case';
 import { NotFoundError } from 'src/core/shared/domain/errors/not-found-error';
 import { AssociateProducerCommand } from './associate-producer-command';
+import { HttpClient } from 'src/core/shared/application/http-client';
 
 export type AssociateProducerOutput = void;
 
@@ -19,6 +20,7 @@ export class AssociateProducerUseCase
     private readonly engineerRepository: EngineerRepository,
     private readonly notificationRepository: NotificationRepository,
     private readonly eventPublisher: EventPublisher,
+    private readonly httpClient: HttpClient,
   ) {}
 
   async execute(
@@ -31,7 +33,15 @@ export class AssociateProducerUseCase
       throw new NotFoundError('engineer');
     }
 
-    const recipientId = '';
+    const response = await this.httpClient.get<{ id: string }>(
+      `/producer/exists/${aCommand.recipientEmail}`,
+      {
+        baseURL: '',
+        headers: {},
+      },
+    );
+
+    const recipientId = response.id;
 
     const notification = Notification.create({
       recipientId: recipientId,
