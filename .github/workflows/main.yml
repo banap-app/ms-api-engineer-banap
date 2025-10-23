@@ -11,7 +11,7 @@ jobs:
       DB_HOST: stormforge.lan
       DB_PORT: '5432'
       DB_USER: Green
-      DB_PASSWORD: StormForge01
+      DB_PASS: StormForge01
       DB_NAME: banap_database
       REDIS_HOST: stormforge.lan
       HTTP_BASE_URL: http://stormforge.lan:8192
@@ -57,7 +57,7 @@ jobs:
             DB_HOST="$DB_HOST" \
             DB_PORT="$DB_PORT" \
             DB_USER="$DB_USER" \
-            DB_PASSWORD="$DB_PASSWORD" \
+            DB_PASS="$DB_PASS" \
             DB_NAME="$DB_NAME" \
             REDIS_HOST="$REDIS_HOST" \
             REDIS_PORT="$REDIS_PORT" \
