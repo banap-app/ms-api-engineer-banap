@@ -42,6 +42,9 @@ export class AssociateProducerUseCase
         },
       },
     );
+    if (!response.id) {
+      throw new NotFoundError('producer');
+    }
 
     const recipientId = response.id;
 
